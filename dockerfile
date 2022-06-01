@@ -13,4 +13,7 @@ RUN chmod +x /script.sh
 ENTRYPOINT ["/script.sh"]
 CMD ["input.mp4", "output.mp4"]
 
+<<<<<<< HEAD
 #################################
+=======
+>>>>>>> a5eb3c3a5dd758857ccb15962e735d5cab7c6dd3
