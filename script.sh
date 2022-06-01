@@ -2,6 +2,7 @@
 INPUT=$1
 OUTPUT=$2
 
+
 dur=$(ffprobe -i footages/imagine.mp4 -v quiet -show_entries format=duration -hide_banner -of default=noprint_wrappers=1:nokey=1)
 num=3
 dur=${dur%.*}
