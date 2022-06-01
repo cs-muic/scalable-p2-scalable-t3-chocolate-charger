@@ -1,13 +1,13 @@
 import sys
-import ffmpy
+import ffmpeg
+from wand.image import Image
+import numpy as np
 
 inp = str(sys.argv[1])
 target = str(sys.argv[2])
 
-print(type(inp))
+ff, err = ffmpeg.input(inp).filter('fps', fps=5, round='up').output('pipe:', format='gif', pix_fmt='rgb24').run()
 
-ff = ffmpy.FFmpeg(
-	inputs = {inp: None},
-	outputs = {target : None})
- 
-ff.run()
+frames = np.frombuffer(ff, np.uint8)
+for i in ff:
+	print(i)
