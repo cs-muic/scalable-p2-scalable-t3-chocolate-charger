@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: p1-backend
+  name: controller
   labels:
-    app: p1-backend
+    app: controller
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: p1-backend
+      app: controller
   template:
     metadata:
       labels:
-        app: p1-backend
+        app: controller
     spec:
       containers:
       - name: backend 
-        image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-backend:lastest
+        image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-backend:latest
         imagePullPolicy: Always
         env:
         - name: MINIO_ACCESS_KEY
