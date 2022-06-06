@@ -23,7 +23,7 @@ RUN pip install poetry
 COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
 RUN poetry install --no-root --no-dev
 
-COPY backend ./
+COPY webcontroller ./
 RUN poetry install --no-dev
 
 
