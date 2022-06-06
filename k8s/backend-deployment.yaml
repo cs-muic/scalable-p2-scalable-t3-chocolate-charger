@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: p1-backend
+  labels:
+    app: p1-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: p1-backend
+  template:
+    metadata:
+      labels:
+        app: p1-backend
+    spec:
+      containers:
+      - name: backend 
+        #image: ghcr.io/cs-muic/scalable-p1-peeleep/p2-backend
+        imagePullPolicy: Always
+        env:
+        - name: MINIO_ACCESS_KEY
+          valueFrom: 
+            configMapKeyRef:
+                name: minio-configmap
+                key: minio-access-key
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+                name: minio-configmap
+                key: minio-secret-key
+
+      #imagePullSecrets:
+      #- name: dockerconfigjson-github-com
