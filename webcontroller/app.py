@@ -5,8 +5,6 @@ from flask_minio import Minio
 from features import upload_video
 
 
-
-
 app = Flask(__name__)
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
