@@ -20,7 +20,7 @@ ADD backend /app
 RUN pip install poetry
 
 
-COPY backend/pyproject.toml backend/poetry.lock ./
+COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
 RUN poetry install --no-root --no-dev
 
 COPY backend ./
