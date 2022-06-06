@@ -1,4 +1,5 @@
 FROM ubuntu:18.04
+FROM python:3.9
 
 # install ffmpeg on our ubuntu
 WORKDIR /app
@@ -12,4 +13,19 @@ COPY ./script.sh /
 RUN chmod +x /script.sh
 ENTRYPOINT ["/script.sh"]
 CMD ["input.mp4", "output.mp4"]
+
+# for flask
+
+ADD backend /app 
+RUN pip install poetry
+
+
+COPY backend/pyproject.toml backend/poetry.lock ./
+RUN poetry install --no-root --no-dev
+
+COPY backend ./
+RUN poetry install --no-dev
+
+
+CMD [ "poetry", "run" , "gunicorn", "-w", "2", "--threads", "2", "-b", "0.0.0.0:5000", "app:app" ]
 
