@@ -39,9 +39,15 @@ spec:
         env:
         # MinIO access key and secret key
         - name: MINIO_ACCESS_KEY
-          value: "minio"
+          valueFrom:
+            configMapKeyRef:
+              name: minio-configmap
+              key: minio-access-key
         - name: MINIO_SECRET_KEY
-          value: "minio123"
+          valueFrom:
+            configMapKeyRef:
+              name: minio-configmap
+              key: minio-secret-key
         ports:
         - containerPort: 9000
         # Readiness probe detects situations when MinIO server instance
