@@ -20,7 +20,6 @@ class minioController:
             self.client.make_bucket("video")
         else:
             print("Bucket 'video' already exists")
-
         # TODO: change this "temp.mp4"
         self.client.fput_object(
             "video", "temp.mp4", file
@@ -52,6 +51,8 @@ class minioController:
 
     def get_file(self, bucket, object, name):
         self.client.fget_object(bucket, object, name)
+
+
 
 def temp():
     job = get_current_job()
