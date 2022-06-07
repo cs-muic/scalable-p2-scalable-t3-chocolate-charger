@@ -1,9 +1,9 @@
 from xmlrpc.client import ResponseError
 from minio import Minio
 from minio.error import S3Error
-
 import time
 from rq import get_current_job
+from app import extract_queue, make_gif_queue
 
 class minioController:
     def __init__(self):

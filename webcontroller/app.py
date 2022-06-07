@@ -6,7 +6,7 @@ from features import *
 from rq.job import Job
 import redis
 from rq import Queue
-
+from webcontroller.features import frames_extraction 
 
 app = Flask(__name__)
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
@@ -24,13 +24,19 @@ redis_connection = redis.Redis(
     password=REDIS_PASSWORD,
 )
 
-redis_queue = Queue(connection=redis_connection)
+extract_queue = Queue('Extraction', connection=redis_connection)
+make_gif_queue = Queue('Giftify', connection=redis_connection)
 
-@app.route("/enqueue", methods=["POST"])
-def enqueue():
-    job = redis_queue.enqueue(temp)
-    # return jsonify({"job_id": "a"})
-    return jsonify({"job_id": job.id})
+
+@app.route('/api/make_gif', methods=['POST'])
+def make_gif():
+    path = request.json.get("path", None)
+    jobs_len = len(extract_queue.jobs)
+    name_minio = upload_video(path, str(jobs_len))
+    extract_queue.enqueue(frames_extraction, )
+    
+    return jsonify({"OK": "DONE"}), 200
+
 
 @app.route('/api/submit', methods=['POST'])
 def submit():
