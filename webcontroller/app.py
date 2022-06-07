@@ -1,37 +1,51 @@
 import os
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, abort
 from flask_caching import Cache
 from flask_minio import Minio
-from features import upload_video
+from features import temp, upload_video
+from rq.job import Job
+import redis
+from rq import Queue
+
+
 
 
 app = Flask(__name__)
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
+REDIS_HOST = os.getenv("REDIS_HOST", "127.0.0.1")
+REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 
-storage = Minio(app)
+redis_connection = redis.Redis(
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+    password=REDIS_PASSWORD,
+)
 
-# # Make 'videos' bucket if not exist.
-# found = client.bucket_exists("videos")
-# if not found:
-#     client.make_bucket("videos")
-# else:
-#     print("Bucket 'videos' already exists")
-#
-# found = client.bucket_exists("frames")
+redis_queue = Queue(connection=redis_connection)
 
-
+@app.route("/enqueue", methods=["POST"])
+def enqueue():
+    job = redis_queue.enqueue(temp)
+    return jsonify({"job_id": job.id})
 
 @app.route('/api/submit', methods=['POST'])
 def submit():
     #create a job and add to the queue
-    return jsonify({"WTF":"WTF"}), 200
+    return jsonify({"NOT":"DONE"}), 200
 
 @app.route('/api/list', methods=['GET'])
 def list():
     #lists all GIF images in a bucket
     lst = []
-    return jsonify({"WTF":"WTF"}), 200
+    return jsonify({"NOT":"DONE"}), 200
+
+@app.route('/api/upload', methods=['POST'])
+def upload():
+    path = request.json.get("path", None)
+    upload_video(path)
+    return jsonify({"OK": "DONE"}), 200
 
 @app.route('/api/upload', methods=['POST'])
 def upload():

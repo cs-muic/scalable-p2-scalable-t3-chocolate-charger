@@ -1,6 +1,16 @@
 from minio import Minio
 from minio.error import S3Error
 
+import time
+from rq import get_current_job
+
+def temp():
+    job = get_current_job()
+    time.sleep(10)
+
+    return {
+        "job_id": job.id
+    }
 
 def upload_video(file):
     client = Minio(
