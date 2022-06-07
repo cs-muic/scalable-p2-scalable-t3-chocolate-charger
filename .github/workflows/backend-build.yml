@@ -27,7 +27,7 @@ jobs:
       run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
     - name: Build the Docker image
       run: |
-        docker build . --file dockerfileeieiei \
+        docker build . --file dockerfile-controller \
         --tag ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-backend:${{ steps.vars.outputs.sha_short }} \
         --tag ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-backend:latest
     - name: Publish the images
