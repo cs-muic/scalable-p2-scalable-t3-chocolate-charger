@@ -2,7 +2,7 @@ name: Build Backend CI
 
 on:
   push:
-    branches: [ peeleep ]
+    branches: [ bananaBood ]
 
 env:
   REGISTRY: ghcr.io
