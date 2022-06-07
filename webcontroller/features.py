@@ -48,7 +48,7 @@ class minioController:
             # try:
             #     print(self.client.fget_object(bucketname, obj, './download/'))
             # except ResponseError as err:
-            #     print(err)
+            #     print(err) #eieiei
 
     def get_file(self, bucket, object, name):
         self.client.fget_object(bucket, object, name)
