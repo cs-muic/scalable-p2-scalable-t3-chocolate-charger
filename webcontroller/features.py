@@ -1,31 +1,45 @@
 from minio import Minio
 from minio.error import S3Error
-
 import time
 from rq import get_current_job
+from app import extract_queue, make_gif_queue
 
-def temp():
-    job = get_current_job()
-    time.sleep(10)
-
-    return {
-        "job_id": job.id
-    }
-
-def upload_video(file):
-    client = Minio(
+minio_client = Minio(
         "localhost:7000",
         access_key="minio",
         secret_key="minio123",
         secure= False
     )
 
-    found = client.bucket_exists("video")
+def frames_extraction(video_name):
+    found = minio_client.bucket_exists("frames_{video_name}")
     if not found:
-        client.make_bucket("video")
+        minio_client.make_bucket("frames_{video_name}")
+    else:
+        print("Bucket 'frames_{video_name}' already exists")
+
+    #extracted =  # run shell script that put into a temporary folder
+    folder
+    minio_client.fput_object(
+        "frames_{video_name}", , 
+    )
+    
+
+
+
+
+
+def upload_video(file, job_num):
+
+    found = minio_client.bucket_exists("video")
+    name_minio = "video{job_num}.mp4"
+    if not found:
+        minio_client.make_bucket("video")
     else:
         print("Bucket 'video' already exists")
 
-    client.fput_object(
-        "video", "temp.mp4", file
+    minio_client.fput_object(
+        "video", name_minio, file
     )
+
+    return name_minio
