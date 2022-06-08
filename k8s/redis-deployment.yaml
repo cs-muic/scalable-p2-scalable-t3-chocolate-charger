@@ -15,8 +15,8 @@ spec:
         tier: backend
     spec:
       containers:
-      - name: master
-        image: redis:latest
+      - name: redis
+        image: redis
         resources:
           requests:
             cpu: 100m
