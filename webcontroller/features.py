@@ -3,6 +3,7 @@ import os
 import time
 from rq import get_current_job
 from minioController import minio
+import subprocess
 
 def notify_queue(str):
     print(str)
@@ -14,7 +15,11 @@ def frames_extraction(filename):
     minio.download_video(filename)
     path = str.split(filename, '.')[0]
     print(path)
-    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} frames') # TOFIX: harcode and path
+    #####
+    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    #####
+    # os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} frames') # TOFIX: harcode and path
     print("extraction DONEEEEEEEEEEEEEE")
     minio.upload_folder("./frames", job.id)
     print("work done eieiei !!!!!")
@@ -25,7 +30,11 @@ def image_compose(jobId):
     #download all frames
     print("debugging")
     minio.download_extracted_frames(jobId)
-    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./temp/{filename} frames') # TOFIX: harcode and path
+    #####
+    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./download/{jobId} output.gif', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    #####
+    # os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./temp/{filename} frames') # TOFIX: harcode and path
 
 
 
