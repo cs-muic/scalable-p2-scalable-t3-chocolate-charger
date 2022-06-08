@@ -27,9 +27,7 @@ class minioController:
         buckets = self.client.list_buckets()
         for bucket in buckets:
             print(bucket.name, bucket.creation_date)
-            print("==================")
             print(bucket)
-            print("==================")
     
     def download_video(self, videoname):
         self.client.fget_object("video", videoname, f"./download/{videoname}", request_headers=None)

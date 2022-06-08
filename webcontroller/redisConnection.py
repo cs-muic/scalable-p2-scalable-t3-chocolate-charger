@@ -10,5 +10,4 @@ redis_conn = redis.Redis(
     password=os.getenv("REDIS_PASSWORD", ""),
 )
 
-
-extract_queue = Queue(connection=redis_conn)
+extract_queue = Queue('Extraction', connection=redis_conn)

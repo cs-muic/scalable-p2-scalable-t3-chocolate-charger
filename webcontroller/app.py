@@ -1,14 +1,16 @@
+from concurrent.futures.thread import _worker
 from fileinput import filename
 import os
+from unicodedata import name
 from flask import Flask, request, jsonify, render_template, abort
 from flask_caching import Cache
 from flask_minio import Minio
-from features import *
-from redisConnection import extract_queue
+from features import *  # TOFIX: this
+from redisConnection import redis_conn, extract_queue
 from minioController import minio
 from rq.job import Job
 import redis
-from rq import Queue
+from rq import Connection, Queue, Worker
 # from webcontroller.features import frames_extraction 
 
 app = Flask(__name__)
@@ -52,9 +54,14 @@ def make_gif():
     uploaded_filename = request.json.get("filename", None)
     pocket = Pocket(filename=uploaded_filename, path=uploaded_path, minio=minio)
     minio.upload_video(pocket.path, pocket.filename)
-    # job = extract_queue.enqueue(frames_extraction, pocket)
-    job = extract_queue.enqueue(some_long_function, pocket)
-    return jsonify({"OK": "DONE"}), 200
+    job = extract_queue.enqueue(frames_extraction, pocket.filename)
+    # workers = Worker.all(queue=extract_queue)
+    # workers.work()
+    
+    w = Worker([extract_queue], connection=redis_conn)
+    w.work()
+    print(job.get_status())
+    return jsonify({"job": job.id}), 200
 
 
 # @app.route('/api/submit', methods=['POST'])

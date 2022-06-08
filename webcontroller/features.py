@@ -1,18 +1,16 @@
 from xmlrpc.client import ResponseError
 import os
-# from minio import Minio
-# from minio.error import S3Error
 import time
 from rq import get_current_job
-# from app import extract_queue, make_gif_queue
+from minioController import minio
 
 def notify_queue():
     pass
 
-def frames_extraction(pocket):
-    print("hahaha")
-    pocket.minio.download_video(pocket.filename)
-    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scipt.sh ./download/{pocket.filename} out.gif') # TOFIX: harcode and path
+def frames_extraction(filename):
+    print("hahahas====================")
+    # minio.download_video(filename)
+    # os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scipt.sh ./download/{filename} out.gif') # TOFIX: harcode and path
 
 def temp():
     job = get_current_job()
