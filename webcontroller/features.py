@@ -8,9 +8,9 @@ def notify_queue():
     pass
 
 def frames_extraction(filename):
-    print("hahahas====================")
-    # minio.download_video(filename)
-    # os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scipt.sh ./download/{filename} out.gif') # TOFIX: harcode and path
+    minio.download_video(filename)
+    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/script.sh ./download/{filename} out.gif') # TOFIX: harcode and path
+    print("work done eieiei !!!!!")
 
 def temp():
     job = get_current_job()

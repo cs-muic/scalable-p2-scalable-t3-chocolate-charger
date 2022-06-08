@@ -59,7 +59,10 @@ def make_gif():
     # workers.work()
     
     w = Worker([extract_queue], connection=redis_conn)
-    w.work()
+    try:
+        w.work()
+    except:
+        print("An exception occurred")
     print(job.get_status())
     return jsonify({"job": job.id}), 200
 

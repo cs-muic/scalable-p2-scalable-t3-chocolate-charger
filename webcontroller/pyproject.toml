@@ -14,7 +14,8 @@ requests = "^2.27.1"
 redis = "^4.3.3"
 gunicorn = "^20.1.0"
 rq = "^1.10.1"
-
+pyzmq = "17.0.0" 
+ipykernel = "^4.8.2"
 [tool.poetry.dev-dependencies]
 
 [build-system]
