@@ -24,7 +24,7 @@ class minioController:
             self.client.fput_object(
                 "frames", f"{filename}/image{i}.jpeg", f"{filePath}/image{i}.jpeg"
             )
-        print("DONE UPLOAD====================================")
+        print("DONE UPLOAD")
 
     def upload_video(self, filePath, filename):
         found = self.client.bucket_exists("video")
@@ -44,13 +44,13 @@ class minioController:
             print(bucket)
     
     def download_video(self, videoname):
-        self.client.fget_object("video", videoname, f"./download/{videoname}", request_headers=None)
+        self.client.fget_object("video", videoname, f"./temp/{videoname}", request_headers=None)
 
     def download_extracted_frames(self, bucketname):
         objs = self.client.list_objects(bucketname)
         for obj in objs:
             print(obj.object_name)
-            self.client.fget_object(bucketname, obj.object_name, "./download/kenny.mp4", request_headers=None)
+            self.client.fget_object(bucketname, obj.object_name, "./temp/kenny.mp4", request_headers=None)
 
     # in case we want to download something outside the bucket we controlled
     def download_specific_file(self, bucket, object, name):
