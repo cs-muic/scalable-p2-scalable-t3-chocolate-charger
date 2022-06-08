@@ -1,0 +1,1 @@
+ffmpeg -i $INPUT -ss $start -t $start.2 -vf "select='not(mod(n\,10))',scale='if(lt(iw,480),480)':'if(lt(ih,360),360)'" -vframes 200 -c:v pam -f
