@@ -4,7 +4,6 @@ from minio import Minio
 from minio.error import S3Error
 import time
 from rq import get_current_job
-# from app import extract_queue, make_gif_queue
 
 class minioController:
     def __init__(self):
@@ -46,39 +45,3 @@ class minioController:
     # in case we want to download something outside the bucket we controlled
     def download_specific_file(self, bucket, object, name):
         self.client.fget_object(bucket, object, name)
-
-def notify_queue():
-    pass
-
-def frames_extraction(pocket):
-    print("hahaha")
-    pocket.minio.download_video(pocket.filename)
-    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scipt.sh ./download/{pocket.filename} out.gif') # TOFIX: harcode and path
-
-def temp():
-    job = get_current_job()
-    time.sleep(10)
-
-    return {
-        "job_id": job.id
-    }
-
-
-import time
-
-from rq import get_current_job
-
-
-def some_long_function(some_input):
-    """An example function for redis queue."""
-    job = get_current_job()
-    time.sleep(10)
-
-    print( {
-        "job_id": job.id,
-        "job_enqueued_at": job.enqueued_at.isoformat(),
-        "job_started_at": job.started_at.isoformat(),
-        "input": some_input,
-        "result": some_input,
-    })
-# def get_object(bucket, object, name):
