@@ -11,11 +11,11 @@ def notify_queue(str):
 def frames_extraction(filename): 
     minio.download_video(filename)
     path = str.split(filename, '.')
-    print(temp_filename)
+    print(path)
     os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/script.sh ./download/{filename} {path}') # TOFIX: harcode and path
     minio.upload_folder(f"./{path}", filename)
     print("work done eieiei !!!!!")
-    return temp_filename
+    return path
 
 def temp():
     job = get_current_job()
