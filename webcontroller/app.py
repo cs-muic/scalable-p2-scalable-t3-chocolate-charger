@@ -6,6 +6,7 @@ from features import *
 from rq.job import Job
 import redis
 from rq import Queue
+from celery import Celery
 
 
 app = Flask(__name__)
@@ -60,6 +61,8 @@ def listing_object():
     # path = request.json.get("path", None)
     minio.download_objects("video")
     return jsonify({"OK": "listing"}), 200
+
+
 
 
 
