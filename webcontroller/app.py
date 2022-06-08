@@ -43,7 +43,9 @@ def make_gif():
     minio.upload_video(pocket.path, pocket.filename)
     job_worker1 = extract_queue.enqueue(frames_extraction, pocket.filename)
     job_id = job_worker1.id
-    job_worker2 = compose_queue.enqueue(notify_queue, job_worker1.id, depends_on=job_worker1)
+    job_worker2 = compose_queue.enqueue(image_compose, job_id, depends_on=job_worker1)
+
+
     # workers = Worker.all(queue=extract_queue)
     # workers.work()
     
@@ -52,38 +54,18 @@ def make_gif():
     #     w.work()
     # except:
     #     print("An exception occurred")
+
+
     print(job_worker1.get_status())
     return jsonify({"job": job_worker1.id}), 200
 
 
-# @app.route('/api/submit', methods=['POST'])
-# def submit():
-#     #create a job and add to the queue
-#     return jsonify({"NOT":"DONE"}), 200
-
-# @app.route('/api/list', methods=['GET'])
-# def list():
-#     #lists all GIF images in a bucket
-#     lst = []
-#     return jsonify({"NOT":"DONE"}), 200
-
-# @app.route('/api/upload', methods=['POST'])
-# def upload():
-#     path = request.json.get("path", None)
-#     minio.upload_video(path)
-#     return jsonify({"OK": "DONE"}), 200
 
 @app.route('/api/listbucket', methods=['POST'])
 def listing_buckets():
     # path = request.json.get("path", None)
     minio.list_buckets()
     return jsonify({"OK": "listing"}), 200
-
-# @app.route('/api/listobject', methods=['POST'])
-# def listing_object():
-#     # path = request.json.get("path", None)
-#     minio.download_objects("video")
-#     return jsonify({"OK": "listing"}), 200
 
 
 
