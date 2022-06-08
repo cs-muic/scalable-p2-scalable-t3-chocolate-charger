@@ -8,7 +8,7 @@ def notify_queue(str):
     print(str)
 
 
-def frames_extraction(filename):
+def frames_extraction(filename): 
     minio.download_video(filename)
     path = str.split(filename, '.')
     print(temp_filename)
