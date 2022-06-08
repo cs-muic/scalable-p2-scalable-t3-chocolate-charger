@@ -14,21 +14,19 @@ def frames_extraction(filename):
     minio.download_video(filename)
     path = str.split(filename, '.')[0]
     print(path)
-    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} {path}') # TOFIX: harcode and path
+    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} frames') # TOFIX: harcode and path
     print("extraction DONEEEEEEEEEEEEEE")
-    minio.upload_folder(path, job.id)
+    minio.upload_folder("./frames", job.id)
     print("work done eieiei !!!!!")
     return path
 
-    
 
-# jobId will be the output's folder name
-def waste_frames_extraction(filename, jobId):
-    minio.download_video(filename)
-    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} {jobId}') # TOFIX: harcode and path
-    # wait for peeleep to create upload method
+def image_compose(jobId):
+    #download all frames
+    print("debugging")
+    minio.download_extracted_frames(jobId)
+    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./temp/{filename} frames') # TOFIX: harcode and path
 
-# def image_compose(folder, )
 
 
 def some_long_function(some_input):

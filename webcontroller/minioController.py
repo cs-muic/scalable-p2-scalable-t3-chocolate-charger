@@ -19,7 +19,6 @@ class minioController:
         else:
             print("Bucket 'frames' already exists")
         # TODO: change this "temp.mp4"
-
         for i in range(1,201):
             self.client.fput_object(
                 "frames", f"{filename}/image{i}.jpeg", f"{filePath}/image{i}.jpeg"
@@ -45,12 +44,19 @@ class minioController:
     
     def download_video(self, videoname):
         self.client.fget_object("video", videoname, f"./temp/{videoname}", request_headers=None)
+    
+    def download_extracted_frames(self, foldername):
+        #version 1 
+        # self.client.fget_object("frames", foldername, f"./download/{foldername}", request_headers=None)
+        #version 2 
+        for i in range(1, 201):
+          self.client.fget_object("frames", f"{foldername}/image{i}.jpeg", f"./download/{foldername}/image{i}.jpeg", request_headers=None)
 
-    def download_extracted_frames(self, bucketname):
-        objs = self.client.list_objects(bucketname)
-        for obj in objs:
-            print(obj.object_name)
-            self.client.fget_object(bucketname, obj.object_name, "./temp/kenny.mp4", request_headers=None)
+    # def download_extracted_frames(self, bucketname):
+    #     objs = self.client.list_objects(bucketname)
+    #     for obj in objs:
+    #         print(obj.object_name)
+    #         self.client.fget_object(bucketname, obj.object_name, "./temp/kenny.mp4", request_headers=None)
 
     # in case we want to download something outside the bucket we controlled
     def download_specific_file(self, bucket, object, name):

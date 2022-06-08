@@ -42,8 +42,8 @@ def make_gif():
     pocket = Pocket(filename=uploaded_filename, path=uploaded_path, minio=minio)
     minio.upload_video(pocket.path, pocket.filename)
     job_worker1 = extract_queue.enqueue(frames_extraction, pocket.filename)
-    # job_id = job_worker1.id
-    # job_worker2 = compose_queue.enqueue(notify_queue, job_id, depends_on=job_worker1)
+    job_id = job_worker1.id
+    job_worker2 = compose_queue.enqueue(image_compose, job_id, depends_on=job_worker1)
 
 
     # workers = Worker.all(queue=extract_queue)
