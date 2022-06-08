@@ -7,18 +7,25 @@ from minioController import minio
 def notify_queue(str):
     print(str)
 
-def frames_extraction(filename):
+def frames_extraction(filename): 
     minio.download_video(filename)
-    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/script.sh ./download/{filename} out.gif') # TOFIX: harcode and path
+    path = str.split(filename, '.')[0]
+    print(path)
+    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./download/{filename} {path}') # TOFIX: harcode and path
+    print("extraction DONEEEEEEEEEEEEEE")
+    minio.upload_folder(path, "sample")
     print("work done eieiei !!!!!")
+    return path
 
-def temp():
-    job = get_current_job()
-    time.sleep(10)
+    
 
-    return {
-        "job_id": job.id
-    }
+# jobId will be the output's folder name
+def waste_frames_extraction(filename, jobId):
+    minio.download_video(filename)
+    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} {jobId}') # TOFIX: harcode and path
+    # wait for peeleep to create upload method
+
+# def image_compose(folder, )
 
 
 def some_long_function(some_input):

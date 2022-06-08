@@ -12,6 +12,20 @@ class minioController:
         secure= False
     )
 
+    def upload_folder(self, filePath, filename):
+        found = self.client.bucket_exists("frames")
+        if not found:
+            self.client.make_bucket("frames")
+        else:
+            print("Bucket 'frames' already exists")
+        # TODO: change this "temp.mp4"
+
+        for i in range(1,201):
+            self.client.fput_object(
+                "frames", f"{filename}/image{i}.jpeg", f"{filePath}/image{i}.jpeg"
+            )
+        print("DONE UPLOAD====================================")
+
     def upload_video(self, filePath, filename):
         found = self.client.bucket_exists("video")
         if not found:
