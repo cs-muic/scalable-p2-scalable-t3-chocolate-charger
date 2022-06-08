@@ -4,8 +4,8 @@ import time
 from rq import get_current_job
 from minioController import minio
 
-def notify_queue():
-    pass
+def notify_queue(str):
+    print(str)
 
 def frames_extraction(filename):
     minio.download_video(filename)
