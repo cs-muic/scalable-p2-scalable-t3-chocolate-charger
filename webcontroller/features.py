@@ -23,11 +23,6 @@ def temp():
     }
 
 
-import time
-
-from rq import get_current_job
-
-
 def some_long_function(some_input):
     """An example function for redis queue."""
     job = get_current_job()
@@ -40,4 +35,3 @@ def some_long_function(some_input):
         "input": some_input,
         "result": some_input,
     })
-# def get_object(bucket, object, name):
