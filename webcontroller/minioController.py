@@ -2,8 +2,6 @@ from xmlrpc.client import ResponseError
 import os
 from minio import Minio
 from minio.error import S3Error
-import time
-from rq import get_current_job
 
 class minioController:
     def __init__(self):
@@ -45,3 +43,6 @@ class minioController:
     # in case we want to download something outside the bucket we controlled
     def download_specific_file(self, bucket, object, name):
         self.client.fget_object(bucket, object, name)
+
+minio = minioController()
+
