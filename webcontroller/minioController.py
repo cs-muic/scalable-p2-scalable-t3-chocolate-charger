@@ -14,6 +14,19 @@ class minioController:
         secure= False
     )
 
+
+    # list of all bucket name
+    def list_buckets(self):
+        buckets = self.client.list_buckets()
+        lst = [bucket.name for bucket in buckets]
+        return lst
+
+    # return all obj in the bucket
+    def list_objects(self, bucket_name):
+        objs = self.client.list_objects(bucketname)
+        lst = [obj.object_name for obj in objs]
+        return lst
+
     def upload_folder(self, filePath, filename):
         found = self.client.bucket_exists("frames")
         if not found:
@@ -36,11 +49,6 @@ class minioController:
             "video", filename, filePath
         )
     
-    def list_buckets(self):
-        buckets = self.client.list_buckets()
-        for bucket in buckets:
-            print(bucket.name, bucket.creation_date)
-            print(bucket)
     
     def download_video(self, videoname):
         self.client.fget_object("video", videoname, f"./download/{videoname}", request_headers=None)

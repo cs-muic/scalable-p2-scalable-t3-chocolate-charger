@@ -7,6 +7,24 @@ from minioController import minio
 def notify_queue(str):
     print(str)
 
+def image_compose(jobId):
+    #download all frames
+    print("debugging")
+    minio.download_extracted_frames(jobId)
+    #####
+    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./download/{jobId} output.gif', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+
+def frames_extraction(obj_name, bucketname):
+    minio.download_video(obj_name)
+    path = str.split(obj_name, '.')[0]
+    print(path)
+    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/script.sh ./download/{obj_name} {path}') # TOFIX: harcode and path
+    minio.upload_folder(f"./{path}", obje_name)
+    print("work done eieiei !!!!!")
+    return path
+
+
 
 def frames_extraction(filename): 
     minio.download_video(filename)

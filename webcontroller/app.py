@@ -11,6 +11,7 @@ from minioController import minio
 from rq.job import Job
 import redis
 from rq import Connection, Queue, Worker
+import json
 
 app = Flask(__name__)
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
@@ -34,6 +35,19 @@ class Pocket:
 # except redis.ConnectionError:
 #     #your error handlig code here 
 #     print("error")
+
+
+@app.route('/api/make_gifs', methods=['POST'])
+def make_gifs():
+    bucket_name = request.json.get("bucket", None) #retrieve bucket name
+    objects = minio.list_objects(bucket_name) #get all objects
+    for obj in objects:
+        job_worker1 = extract_queue.enqueue(frames_extraction, obj, bucket_name)
+        job_id = job_worker1.id
+        job_worker2 = compose_queue.enqueue(image_compose, job_id, depends_on=job_worker1)
+
+    return jsonify({"bucket": bucket_name, "status": "working", "job_id":job_id}), 200
+ 
 
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():

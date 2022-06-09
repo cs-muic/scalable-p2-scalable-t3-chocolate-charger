@@ -5,6 +5,7 @@ metadata:
   labels:
     app: rq-worker
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: rq-worker
