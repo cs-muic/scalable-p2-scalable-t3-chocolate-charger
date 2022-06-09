@@ -6,4 +6,4 @@ WORKDIR /app
 
 RUN pip install rq
 
-CMD ["rq", "worker", "Composer"]
+CMD ["rq", "worker", "--url", "redis://redis:6379", "Composer"]
