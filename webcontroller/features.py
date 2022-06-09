@@ -52,7 +52,7 @@ def frames_extraction(filename, workId):
     minio.upload_folder("./frames", workId)
     print(f"extraction {workId} done")
     # update state of the job
-    job_worker3 = log_queue.enqueue(update_status, 1, workId)
+    job_worker3 = log_queue.enqueue(update__done_status, 1, workId)
     # push to queue 2
     job_worker2 = compose_queue.enqueue(image_compose, workId)
 
@@ -67,11 +67,14 @@ def image_compose(workId):
     process.wait()
     print(f"Done {workId}")
     # update state of the job
-    job_worker3 = log_queue.enqueue(update_status, 2, workId)
+    job_worker3 = log_queue.enqueue(update__done_status, 2, workId)
 
-def update_status(worker, workId):
+def update__done_status(worker, workId):
     if worker == 1:
         redis_conn.set(workId, "Extracted >> composing")
     else:
         redis_conn.set(workId, "Job Completed")
     print(f"Worker {worker} Done Task Id {workId}")
+
+def update_fail_status(workId):
+    redis_conn.set(workId, "BOOOOOM!!!!!!!")
