@@ -1,0 +1,7 @@
+FROM ubuntu:18.04
+
+WORKDIR /app
+
+RUN pip install rq
+
+ENTRYPOINT ["rq", "worker", "Extraction"]
