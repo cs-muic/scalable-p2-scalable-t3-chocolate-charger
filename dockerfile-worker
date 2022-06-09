@@ -11,5 +11,5 @@ COPY webcontroller ./
 RUN poetry install --no-dev
 
 
-ENTRYPOINT [ "poetry", "run" , "rq", "worker"]
+ENTRYPOINT [ "poetry", "run" , "rq", "worker", "redis://redis:6379"]
 CMD ["Extraction"]
