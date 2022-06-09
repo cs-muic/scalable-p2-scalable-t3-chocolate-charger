@@ -2,6 +2,6 @@ FROM python:3.9
 
 WORKDIR /app
 
-RUN pip install rq
+RUN poetry install rq
 
-ENTRYPOINT ["rq", "worker", "Extraction"]
+CMD ["rq", "worker", "Extraction"]
