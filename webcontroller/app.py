@@ -11,6 +11,7 @@ from minioController import minio
 from rq.job import Job
 import redis
 from rq import Connection, Queue, Worker
+import json
 
 app = Flask(__name__)
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
@@ -45,29 +46,26 @@ def make_gif():
     job_id = job_worker1.id
     job_worker2 = compose_queue.enqueue(image_compose, job_id, depends_on=job_worker1)
 
-
-    # workers = Worker.all(queue=extract_queue)
-    # workers.work()
-    
-    # w = Worker([extract_queue], connection=redis_conn)
-    # try:
-    #     w.work()
-    # except:
-    #     print("An exception occurred")
-
-
     print(job_worker1.get_status())
     return jsonify({"job": job_worker1.id}), 200
 
 
 
+# api that return a list of buckets (name)
 @app.route('/api/listbucket', methods=['POST'])
 def listing_buckets():
-    # path = request.json.get("path", None)
-    minio.list_buckets()
-    return jsonify({"OK": "listing"}), 200
+    lst = minio.list_buckets()
+    return json.dumps(lst), 200
 
+@app.route('/api/test', methods=['POST'])
+def test():
+    #  bucket_name = request.json.get("bucket", None)
+     minio.list_objects("video")
+     return jsonify({"test": "test"}), 200
 
+@app.route('/api/make_bucket', methods=['POST'])
+def make_bucket():
+     bucket_name = request.json.get("bucket", None)
 
 
 
