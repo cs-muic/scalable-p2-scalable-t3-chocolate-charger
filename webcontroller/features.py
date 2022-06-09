@@ -20,9 +20,8 @@ def frames_extraction(filename):
     process.wait()
     #####
     # os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} frames') # TOFIX: harcode and path
-    print("extraction DONEEEEEEEEEEEEEE")
     minio.upload_folder("./frames", job.id)
-    print("work done eieiei !!!!!")
+    print("work done")
     return path
 
 

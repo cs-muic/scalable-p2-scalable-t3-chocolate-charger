@@ -45,11 +45,7 @@ class minioController:
     # return all obj in the bucket
     def list_objects(self, bucketname):
         objs = self.client.list_objects(bucketname)
-        # for obj in objs:
-        #     print(obj.__dict__)
-        #     print(obj.object_name)
         lst = [obj.object_name for obj in objs]
-        print(lst)
         return lst
     
     # it only download in "video" bucket

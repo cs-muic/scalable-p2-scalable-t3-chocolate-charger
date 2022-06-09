@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rq-worker-extraction
+  labels:
+    app: rq-worker
+spec:
+  selector:
+    matchLabels:
+      app: rq-worker
+  template:
+    metadata:
+      labels:
+        app: rq-worker
+    spec:
+      containers:
+      - name: rq-worker-extraction
+        image: ghcr.io/cs-muic/p2-choco-charger-extract-worker:latest
+        imagePullPolicy: Always
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com

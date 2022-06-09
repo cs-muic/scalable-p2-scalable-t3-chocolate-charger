@@ -46,10 +46,13 @@ def make_gif():
     job_id = job_worker1.id
     job_worker2 = compose_queue.enqueue(image_compose, job_id, depends_on=job_worker1)
 
-    print(job_worker1.get_status())
-    return jsonify({"job": job_worker1.id}), 200
+    return jsonify({"job": job_worker2.id}), 200
 
-
+@app.route('/api/status', methods=['POST'])
+def check_status():
+    job_id = request.json.get("jobId", None)
+    return jsonify({job_id: Job.fetch(job_id, connection=redis_conn).get_status()}), 200
+    
 
 # api that return a list of buckets (name)
 @app.route('/api/listbucket', methods=['POST'])
