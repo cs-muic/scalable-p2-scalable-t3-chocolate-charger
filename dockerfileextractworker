@@ -4,6 +4,6 @@ RUN pip install poetry
 
 WORKDIR /app
 
-RUN poetry install rq
+RUN pip install rq
 
 CMD ["rq", "worker", "Extraction"]
