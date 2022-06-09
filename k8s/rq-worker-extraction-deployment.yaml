@@ -16,3 +16,6 @@ spec:
       containers:
       - name: rq-worker-extraction
         image: ghcr.io/cs-muic/p2-choco-charger-extract-worker:latest
+        imagePullPolicy: Always
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com
