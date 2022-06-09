@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: redis
+    role: worker
+    tier: backend
+  name: rq-worker
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: redis
+      role: worker
+      tier: backend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis
+        role: worker
+        tier: backend
+    spec:
+      containers:
+      - env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        image: tiao/rq-worker:v1
+        name: rq-worker
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+status: {}
