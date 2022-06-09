@@ -56,7 +56,6 @@ class minioController:
         for i in range(1, 201):
           self.client.fget_object("frames", f"{foldername}/image{i}.jpeg", f"./download/{foldername}/image{i}.jpeg", request_headers=None)
 
-
     # in case we want to download something outside the bucket we controlled
     def download_specific_file(self, bucket, object, name):
         self.client.fget_object(bucket, object, name)

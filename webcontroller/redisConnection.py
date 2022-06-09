@@ -12,3 +12,4 @@ redis_conn = redis.Redis(
 
 extract_queue = Queue('Extraction', connection=redis_conn)
 compose_queue = Queue('Composer', connection=redis_conn)
+log_queue = Queue('Log', connection=redis_conn)

@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, render_template, abort
 from flask_caching import Cache
 from flask_minio import Minio
 from features import *  # TOFIX: this
-from redisConnection import redis_conn, extract_queue, compose_queue
+from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
 from minioController import minio
 from rq.job import Job
 import redis
@@ -47,9 +47,35 @@ def check_status():
     return jsonify({"process": str(process)}), 200
     
 
+# api that return a list of objects
+@app.route('/api/list_objs', methods=['POST'])
+def list_objects():
+    bucket_name = request.json.get("bucket", None)
+    lst = minio.list_objects(bucket_name)
+    return json.dumps(lst), 200
+
+# creates multiple jobs for all videos in the bucket
+@app.route('/api/doing_bucket', methods=['POST'])
+def do_bucket():
+    bucket_name = request.json.get("bucket", None)
+    lst = minio.list_objects(bucket_name)
+    to_return = dict()
+
+    # tracking job Id
+    global init_job_id
+    
+    for i in range(len(lst)):
+        init_job_id += 1
+        # enqueue to worker1
+        job_worker1 = extract_queue.enqueue(frames_extraction,lst[i], init_job_id)
+        to_return[lst[i]] = init_job_id
+    
+    
+    return json.dumps(to_return), 200
+
 # api that return a list of buckets (name)
-@app.route('/api/listbucket', methods=['POST'])
-def listing_buckets():
+@app.route('/api/list_bucket', methods=['POST'])
+def list_buckets():
     lst = minio.list_buckets()
     return json.dumps(lst), 200
 

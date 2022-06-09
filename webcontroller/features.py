@@ -4,7 +4,7 @@ import time
 from rq import get_current_job
 from minioController import minio
 import subprocess
-from redisConnection import redis_conn, extract_queue, compose_queue
+from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
 
 def frames_extraction(filename, workId): 
     
@@ -35,7 +35,7 @@ def image_compose(workId):
     print(f"Done {workId}")
     # update state of the job
     redis_conn.set(workId, "Job Completd")
-
+#############################################################################################
 # this function, in case we are to do queue 3
 def update_status(worker, workId):
     if worker == 1:
