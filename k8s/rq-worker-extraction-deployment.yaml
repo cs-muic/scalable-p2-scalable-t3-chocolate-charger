@@ -15,11 +15,6 @@ spec:
     spec:
       containers:
       - name: rq-worker-extract
-        image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-extract-worker:latest
-        # command:
-        #   - rqworker
-        #   - --url
-        #   - redis://redis:6379
-        #   - Extraction   
+        image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-extract-worker:latest  
       imagePullSecrets:
       - name: dockerconfigjson-github-com

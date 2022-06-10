@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rq-worker-log
+  labels:
+    app: rq-worker-log
+  selector:
+    matchLabels:
+      app: rq-worker-log
+  template:
+    metadata:
+      labels:
+        app: rq-worker-log
+    spec:
+      containers:
+      - name: rq-worker-log
+        image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-update-worker:latest
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com
