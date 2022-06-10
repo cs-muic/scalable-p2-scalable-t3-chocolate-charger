@@ -8,9 +8,9 @@ docker run -v /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-
 
 ## Milestone 2 
 
-### What I have done: 
+deploy
+```
+kubectl apply -f k8s
+```
 
-added minio configmap to store some minio access key and minio secret key
-started webcontroller component (REST API) using flask
-    : trying to grab minio environment using python's os
-    : create_bucket via python
+API:
