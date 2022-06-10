@@ -20,7 +20,9 @@ spec:
         imagePullPolicy: Always
         env:
         - name: MINIO_ADDRESS
-          value: "minio.default.svc:9000"
+          value: minio.default.svc
+        -name: MINIO_PORT
+          value: "9000"
         - name: MINIO_ACCESS_KEY
           valueFrom: 
             configMapKeyRef:

@@ -6,17 +6,17 @@ from minio.error import S3Error
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "localhost:9000")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
-
+MINIO_PORT =os.getenv("MINIO_PORT")
 print("##########minio###########")
 print(MINIO_ACCESS_KEY)
 print(MINIO_SECRET_KEY)
 print(MINIO_ADDRESS)
 print("##########include###########")
-address = str(MINIO_ADDRESS) + ":9000"
+address = str(MINIO_ADDRESS) + ":" + str(MINIO_PORT)
 class minioController:
     def __init__(self):
         self.client = Minio(
-        "0.0.0.0:9000",
+        address,
         access_key="minio",
         secret_key="minio123",
         secure= False
