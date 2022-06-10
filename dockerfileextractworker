@@ -10,7 +10,7 @@ RUN apt-get install python3 -y
 RUN apt install python3-pip -y
 ADD webcontroller /app 
 
-RUN pip install poetry
+RUN pip3 install poetry
 
 
 COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
