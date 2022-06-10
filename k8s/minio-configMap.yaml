@@ -3,5 +3,7 @@ kind: ConfigMap
 metadata:
   name: minio-configmap
 data:
-  minio-access-key: bWluaW8=
-  minio-secret-key: bWluaW8xMjM=
+  minio-access-key: minio
+  minio-secret-key: minio123
+  # minio-access-key: bWluaW8=
+  # minio-secret-key: bWluaW8xMjM=

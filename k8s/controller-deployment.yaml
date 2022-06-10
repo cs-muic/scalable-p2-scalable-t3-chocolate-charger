@@ -21,7 +21,7 @@ spec:
         env:
         - name: MINIO_ADDRESS
           value: minio.default.svc
-        -name: MINIO_PORT
+        - name: MINIO_PORT
           value: "9000"
         - name: MINIO_ACCESS_KEY
           valueFrom: 
@@ -34,7 +34,7 @@ spec:
                 name: minio-configmap
                 key: minio-secret-key
         - name: REDIS_HOST
-          value: redis://redis
+          value: redis.default.svc
         - name: REDIS_PORT
           value: "6379"
         - name: REDIS_PASSWORD

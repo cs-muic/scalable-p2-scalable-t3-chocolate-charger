@@ -39,10 +39,21 @@ def make_gifs():
 
     return jsonify({"bucket": bucket_name, "status": "working", "job_id":job_id}), 200
  
-
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():
+    # create uqiue job ID
+    global init_job_id
+    init_job_id += 1
+    # set its state to redis
+    redis_conn.set(init_job_id, "Extracting Frames")
+    uploaded_filename = request.json.get("filename", None)
+    # pass it to worker 1 (enqueue)
+    job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
+    # return job's ID that we can use it to check the status
+    return jsonify({"jobId": init_job_id}), 200
 
+@app.route('/api/make_gif_upload', methods=['POST'])
+def make_gif_upload():
     # create uqiue job ID
     global init_job_id
     init_job_id += 1
