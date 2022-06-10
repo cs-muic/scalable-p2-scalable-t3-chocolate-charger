@@ -3,10 +3,14 @@ import os
 from minio import Minio
 from minio.error import S3Error
 
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "localhost:9000")
+MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
+MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
+
 class minioController:
     def __init__(self):
         self.client = Minio(
-        "localhost:9000",
+        "minio.default.svc:9000",
         access_key="minio",
         secret_key="minio123",
         secure= False
@@ -21,7 +25,7 @@ class minioController:
 
     # return all obj in the bucket
     def list_objects(self, bucket_name):
-        objs = self.client.list_objects(bucketname)
+        objs = self.client.list_objects(bucket_name)
         lst = [obj.object_name for obj in objs]
         return lst
 
@@ -31,7 +35,7 @@ class minioController:
             self.client.make_bucket("frames")
         else:
             print("Bucket 'frames' already exists")
-        # TODO: change this "temp.mp4"
+        # TODO: can we upload the whole folder at once? (performance issue)
         for i in range(1,201):
             self.client.fput_object(
                 "frames", f"{filename}/image{i}.jpeg", f"{filePath}/image{i}.jpeg"

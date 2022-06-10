@@ -14,10 +14,9 @@ from rq import Connection, Queue, Worker
 import json
 
 app = Flask(__name__)
-MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
-MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 
 # job id counter
+# we can also store this id in the redis
 init_job_id = 0
 
 
