@@ -8,13 +8,12 @@ from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
 
 
 def frames_extraction_by2queues(filename, workId): 
-    
     # pull video from minio
     minio.download_video(filename)
     path = str.split(filename, '.')[0]
     print(path)
     # perfrom sh script
-    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(f'sh ./scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
     process.wait()
     # upload frames back to minio
     minio.upload_folder("./frames", workId)
@@ -26,12 +25,11 @@ def frames_extraction_by2queues(filename, workId):
 
 
 def image_compose_by2queues(workId):
-
     # download all frames
     print(f"Start Composing {workId}")
     minio.download_extracted_frames(workId)
     # perfrom sh script
-    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./download/{workId} output.gif', shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} output.gif', shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(f"Done {workId}")
     # update state of the job
@@ -40,13 +38,12 @@ def image_compose_by2queues(workId):
 ######################### Below this line Using 3 queue (The thrid is Log queue) ################################
 
 def frames_extraction(filename, workId): 
-    
     # pull video from minio
     minio.download_video(filename)
     path = str.split(filename, '.')[0]
     print(path)
     # perfrom sh script
-    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(f'sh ./scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
     process.wait()
     # upload frames back to minio
     minio.upload_folder("./frames", workId)
@@ -58,12 +55,11 @@ def frames_extraction(filename, workId):
 
 
 def image_compose(workId):
-
     # download all frames
     print(f"Start Composing {workId}")
     minio.download_extracted_frames(workId)
     # perfrom sh script
-    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./download/{workId} {workId}.gif', shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} {workId}.gif', shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(f"Done {workId}")
     # update state of the job
