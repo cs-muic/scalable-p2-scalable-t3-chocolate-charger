@@ -6,8 +6,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y ffmpeg
 #also install imagemagick
 RUN apt install imagemagick -y
+RUN sudo apt update 
+RUN sudo apt install software-properties-common 
+RUN sudo add-apt-repository ppa:deadsnakes/ppa 
+RUN sudo apt update 
 RUN sudo apt install python3.9 -y
-RUN sudo apt install python3-pip -y
+RUN apt install python3-pip -y
+
+
 ADD webcontroller /app 
 
 RUN pip3 install poetry
