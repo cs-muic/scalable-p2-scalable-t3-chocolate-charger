@@ -4,6 +4,7 @@ metadata:
   name: rq-worker-log
   labels:
     app: rq-worker-log
+spec:
   selector:
     matchLabels:
       app: rq-worker-log
