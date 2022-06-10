@@ -7,6 +7,12 @@ MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "localhost:9000")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
 
+print("##########minio###########")
+print(MINIO_ACCESS_KEY)
+print(MINIO_SECRET_KEY)
+print(MINIO_ADDRESS)
+print("##########include###########")
+address = str(MINIO_ADDRESS) + ":9000"
 class minioController:
     def __init__(self):
         self.client = Minio(

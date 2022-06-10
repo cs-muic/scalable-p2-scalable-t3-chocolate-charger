@@ -91,6 +91,11 @@ def list_buckets():
     lst = minio.list_buckets()
     return json.dumps(lst), 200
 
+################ Testing API ###################
+@app.route('/api/testing', methods=['POST'])
+def testing():
+    lst = [1,2,3]
+    return json.dumps(lst), 200
 
 if __name__ == '__main__':
     app.run()
