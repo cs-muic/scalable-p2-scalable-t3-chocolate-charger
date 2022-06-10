@@ -20,6 +20,19 @@ MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 # job id counter
 init_job_id = 0
 
+
+@app.route('/api/make_gifs', methods=['POST'])
+def make_gifs():
+    bucket_name = request.json.get("bucket", None) #retrieve bucket name
+    objects = minio.list_objects(bucket_name) #get all objects
+    for obj in objects:
+        job_worker1 = extract_queue.enqueue(frames_extraction, obj, bucket_name)
+        job_id = job_worker1.id
+        job_worker2 = compose_queue.enqueue(image_compose, job_id, depends_on=job_worker1)
+
+    return jsonify({"bucket": bucket_name, "status": "working", "job_id":job_id}), 200
+ 
+
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():
 

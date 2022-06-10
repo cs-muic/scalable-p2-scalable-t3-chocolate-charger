@@ -12,6 +12,19 @@ class minioController:
         secure= False
     )
 
+
+    # list of all bucket name
+    def list_buckets(self):
+        buckets = self.client.list_buckets()
+        lst = [bucket.name for bucket in buckets]
+        return lst
+
+    # return all obj in the bucket
+    def list_objects(self, bucket_name):
+        objs = self.client.list_objects(bucketname)
+        lst = [obj.object_name for obj in objs]
+        return lst
+
     def upload_folder(self, filePath, filename):
         found = self.client.bucket_exists("frames")
         if not found:
