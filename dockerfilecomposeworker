@@ -1,4 +1,13 @@
 FROM python:3.9
+FROM ubuntu:18.04
+
+
+#install ffmpeg on our ubuntu
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y ffmpeg
+#also install imagemagick
+RUN apt install imagemagick -y
+
 ADD webcontroller /app 
 
 RUN pip install poetry
