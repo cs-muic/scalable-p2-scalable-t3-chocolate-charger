@@ -16,7 +16,7 @@ RUN apt install python3.9 -y
 
 ADD webcontroller /app 
 
-RUN pip3 install poetry
+RUN pip install poetry
 
 
 COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
