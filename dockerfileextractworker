@@ -17,7 +17,7 @@ RUN pip3 install --upgrade pip
 ADD webcontroller /app 
 
 RUN pip install poetry
-
+RUN poetry env use python3.9
 
 COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
 RUN poetry install --no-root --no-dev
