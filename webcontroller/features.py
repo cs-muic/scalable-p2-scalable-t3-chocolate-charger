@@ -63,7 +63,7 @@ def image_compose(workId):
     print(f"Start Composing {workId}")
     minio.download_extracted_frames(workId)
     # perfrom sh script
-    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./download/{workId} output.gif', shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./download/{workId} {workId}.gif', shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(f"Done {workId}")
     # update state of the job

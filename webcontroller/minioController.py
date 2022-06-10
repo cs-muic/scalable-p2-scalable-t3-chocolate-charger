@@ -31,7 +31,6 @@ class minioController:
             self.client.make_bucket("video")
         else:
             print("Bucket 'video' already exists")
-        # TODO: change this "temp.mp4"
         self.client.fput_object(
             "video", filename, filePath
         )
