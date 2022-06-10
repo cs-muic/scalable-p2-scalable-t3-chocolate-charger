@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y ffmpeg
 #also install imagemagick
 RUN apt install imagemagick -y
 RUN apt update 
-RUN apt install software-properties-common 
+RUN apt install software-properties-common  -y
 RUN add-apt-repository ppa:deadsnakes/ppa 
 RUN apt update 
 RUN apt install python3.9 -y
