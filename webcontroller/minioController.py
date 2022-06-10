@@ -16,7 +16,7 @@ address = str(MINIO_ADDRESS) + ":9000"
 class minioController:
     def __init__(self):
         self.client = Minio(
-        "minio.default.svc:9000",
+        "0.0.0.0:9000",
         access_key="minio",
         secret_key="minio123",
         secure= False
