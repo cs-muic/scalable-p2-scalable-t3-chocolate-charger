@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 
 #install ffmpeg on our ubuntu
-WORKDIR /app
+# WORKDIR /app
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y ffmpeg
 
@@ -14,7 +14,7 @@ FROM python:3.9
 
 RUN pip install poetry
 
-WORKDIR /app
+# WORKDIR /app
 
 COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
 RUN poetry install --no-root --no-dev
