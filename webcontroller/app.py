@@ -27,6 +27,8 @@ REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 # we can also store this id in the redis
 init_job_id = 0
 
+def pi():
+    print("whatev")
 
 @app.route('/api/make_gifs', methods=['POST'])
 def make_gifs():
@@ -45,10 +47,12 @@ def make_gif():
     global init_job_id
     init_job_id += 1
     # set its state to redis
+
+
     redis_conn.set(init_job_id, "Extracting Frames")
     uploaded_filename = request.json.get("filename", None)
     # pass it to worker 1 (enqueue)
-    job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
+    job_worker1 = extract_queue.enqueue(pi) #extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
     # return job's ID that we can use it to check the status
     return jsonify({"jobId": init_job_id}), 200
 
