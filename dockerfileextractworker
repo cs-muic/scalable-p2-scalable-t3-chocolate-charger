@@ -24,4 +24,4 @@ RUN poetry install --no-dev
 
 RUN pip install rq
 
-CMD ["rq", "worker", "--url", "redis://redis:6379", "Extraction"]
+CMD ["flask", "run", "&&", "rq", "worker", "--url", "redis://redis:6379", "Extraction"]
