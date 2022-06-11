@@ -9,4 +9,5 @@ RUN poetry install --no-root --no-dev
 COPY webcontroller ./
 RUN poetry install --no-dev
 
-CMD ["poetry", "run", "python3", "extract.py"]
+#CMD ["poetry", "run", "python3", "extract.py"]
+CMD ["rq", "worker"]
