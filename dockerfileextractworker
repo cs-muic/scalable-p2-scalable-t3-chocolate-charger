@@ -8,7 +8,9 @@ COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
 RUN poetry install --no-root --no-dev
 
 COPY webcontroller ./
-RUN pip install --no-dev
+RUN poetry install --no-dev
+
+RUN pip install rq
 
 
 CMD ["rq", "worker", "--url", "redis://redis:6379", "Extraction"]
