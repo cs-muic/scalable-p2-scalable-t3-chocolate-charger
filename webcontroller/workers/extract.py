@@ -2,8 +2,8 @@ import os
 import sys 
 import redis
 from rq import Worker, Queue, Connection
-from ..redisConnection import extract_queue, redis_conn
-import features
+from .. import redisConnection
+from .. import features
 
 
 
