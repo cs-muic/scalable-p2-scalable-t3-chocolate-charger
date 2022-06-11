@@ -10,5 +10,6 @@ RUN poetry install --no-root --no-dev
 COPY webcontroller ./
 RUN poetry install --no-dev
 
-
-CMD [ "poetry", "run" , "gunicorn", "-w", "2", "--threads", "2", "-b", "0.0.0.0:5000", "app:app" ]
+ENTRYPOINT [ "poetry", "shell" ]
+CMD [ "flask", "run"]
+# CMD [ "poetry", "run" , "gunicorn", "-w", "2", "--threads", "2", "-b", "0.0.0.0:5000", "app:app" ]
