@@ -5,7 +5,7 @@ from unicodedata import name
 from flask import Flask, request, jsonify, render_template, abort
 from flask_caching import Cache
 from flask_minio import Minio
-from features import *  # TOFIX: this
+#from features import *  # TOFIX: this
 from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
 from minioController import minio
 from rq.job import Job
@@ -51,9 +51,9 @@ def make_gif():
     uploaded_filename = request.json.get("filename", None)
 
     # test
-    print("test") 
+     
     # pass it to worker 1 (enqueue)
-    #job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
+    job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
     # return job's ID that we can use it to check the status
     return jsonify({"jobId": init_job_id}), 200
 

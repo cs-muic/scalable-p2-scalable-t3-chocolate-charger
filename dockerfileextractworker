@@ -3,13 +3,12 @@ FROM python:3.9
 RUN pip install poetry
 WORKDIR /app
 
-# COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
-# RUN poetry install --no-root --no-dev
+COPY workers/pyproject.toml workers/poetry.lock ./
+RUN poetry install --no-root --no-dev
 
-# COPY webcontroller ./
-# RUN poetry install --no-dev
+COPY workers ./
+RUN poetry install --no-dev
 
 RUN pip install rq
 
-
-CMD ["rq", "worker", "--url", "redis://redis:6379", "Extraction"]
+CMD ["python3", "extract.py"]
