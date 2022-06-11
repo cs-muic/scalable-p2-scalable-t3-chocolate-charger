@@ -18,3 +18,10 @@ spec:
         image: redis:latest
         ports:
         - containerPort: 6379
+      env:
+        - name: REDIS_HOST
+          value: redis.default.svc
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          value: ""
