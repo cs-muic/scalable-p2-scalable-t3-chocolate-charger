@@ -1,7 +1,7 @@
 FROM python:3.9
 
 RUN pip install poetry
-WORKDIR /app
+ADD webcontroller /app 
 
 COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
 RUN poetry install --no-root --no-dev
@@ -9,6 +9,4 @@ RUN poetry install --no-root --no-dev
 COPY webcontroller ./
 RUN poetry install --no-dev
 
-RUN pip install rq
-
-CMD ["python3", "extract.py"]
+CMD ["poetry", "run", "python3", "extract.py"]

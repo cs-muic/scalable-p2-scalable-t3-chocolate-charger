@@ -4,6 +4,7 @@ ADD webcontroller /app
 RUN pip install poetry
 
 
+
 COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
 RUN poetry install --no-root --no-dev
 
