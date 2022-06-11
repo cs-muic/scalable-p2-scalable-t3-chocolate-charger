@@ -4,11 +4,11 @@ RUN pip install poetry
 
 # WORKDIR /app
 
-COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
-RUN poetry install --no-root --no-dev
+# COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
+# RUN poetry install --no-root --no-dev
 
-COPY webcontroller ./
-RUN poetry install --no-dev
+# COPY webcontroller ./
+# RUN poetry install --no-dev
 
 RUN pip install rq
 
