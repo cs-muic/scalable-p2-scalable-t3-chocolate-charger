@@ -11,4 +11,4 @@ RUN poetry install --no-dev
 
 RUN pip install rq
 
-CMD ["python3", "webcontroller/workers/extract.py"]
+CMD ["python3", "workers/extract.py"]
