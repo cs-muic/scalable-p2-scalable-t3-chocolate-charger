@@ -2,9 +2,9 @@ FROM python:3.9
 
 RUN pip install poetry
 
-# WORKDIR /app
+WORKDIR /app
 
-COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
+COPY webcontroller/pyproject.toml webcontroller/poetry.lock .
 RUN poetry install --no-root --no-dev
 
 COPY webcontroller .
