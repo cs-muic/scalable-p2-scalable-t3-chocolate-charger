@@ -1,3 +1,14 @@
+FROM ubuntu:18.04
+
+
+#install ffmpeg on our ubuntu
+WORKDIR /app
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y ffmpeg
+
+#also install imagemagick
+RUN apt install imagemagick -y
+
 FROM python:3.9
 
 RUN pip install poetry
@@ -11,5 +22,5 @@ RUN poetry install --no-dev
 
 RUN pip install rq
 
-#CMD ["poetry", "run", "python3", "extract.py"]
-CMD ["rq", "worker", "--url", "redis://redis:6379", "Extraction"]
+CMD ["poetry", "run", "python3", "extract.py"]
+#CMD ["rq", "worker", "--url", "redis://redis:6379", "Extraction"]
