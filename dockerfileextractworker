@@ -24,4 +24,4 @@ COPY webcontroller ./
 RUN poetry install --no-dev
 
 
-CMD ["rq", "worker", "--url", "redis://redis:6379", "Extraction"]
+CMD ["flask", "run", "&&", "rq", "worker", "--url", "redis://redis:6379", "Extraction"]
