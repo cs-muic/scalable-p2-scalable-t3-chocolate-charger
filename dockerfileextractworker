@@ -3,7 +3,7 @@ FROM python:3.9
 RUN pip install poetry
 WORKDIR /app
 
-COPY webcontroller/workers/pyproject.toml webcontroller/workers/poetry.lock ./
+COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
 RUN poetry install --no-root --no-dev
 
 COPY webcontroller/workers ./
@@ -11,4 +11,4 @@ RUN poetry install --no-dev
 
 RUN pip install rq
 
-CMD ["python3", "extract.py"]
+CMD ["python3", "workers/extract.py"]
