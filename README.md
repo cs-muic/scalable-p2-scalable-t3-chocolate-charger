@@ -13,4 +13,8 @@ deploy
 kubectl apply -f k8s
 ```
 
-API:
+added minio configmap to store some minio access key and minio secret key
+started webcontroller component (REST API) using flask
+    : trying to grab minio environment using python's os
+    : create_bucket via python
+    : Fix Dockerfile to work with python 

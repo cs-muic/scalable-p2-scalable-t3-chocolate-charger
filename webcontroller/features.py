@@ -3,56 +3,74 @@ import os
 import time
 from rq import get_current_job
 from minioController import minio
-
-def notify_queue(str):
-    print(str)
-
-def image_compose(jobId):
-    #download all frames
-    print("debugging")
-    minio.download_extracted_frames(jobId)
-    #####
-    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./download/{jobId} output.gif', shell=True, stdout=subprocess.PIPE)
-    process.wait()
-
-def frames_extraction(obj_name, bucketname):
-    minio.download_video(obj_name)
-    path = str.split(obj_name, '.')[0]
-    print(path)
-    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/script.sh ./download/{obj_name} {path}') # TOFIX: harcode and path
-    minio.upload_folder(f"./{path}", obje_name)
-    print("work done eieiei !!!!!")
-    return path
+import subprocess
+from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
 
 
-
-def frames_extraction(filename): 
+def frames_extraction_by2queues(filename, workId): 
+    # pull video from minio
     minio.download_video(filename)
-    path = str.split(filename, '.')
+    path = str.split(filename, '.')[0]
     print(path)
-    os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/script.sh ./download/{filename} {path}') # TOFIX: harcode and path
-    minio.upload_folder(f"./{path}", filename)
-    print("work done eieiei !!!!!")
-    return path
-
-def temp():
-    job = get_current_job()
-    time.sleep(10)
-
-    return {
-        "job_id": job.id
-    }
+    # perfrom sh script
+    process = subprocess.Popen(f'sh ./scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    # upload frames back to minio
+    minio.upload_folder("./frames", workId)
+    print(f"extraction {workId} done")
+    # update state of the job
+    redis_conn.set(workId, "Extracted Done >> Now Composing")
+    # push to queue 2
+    job_worker2 = compose_queue.enqueue(image_compose, workId)
 
 
-def some_long_function(some_input):
-    """An example function for redis queue."""
-    job = get_current_job()
-    time.sleep(10)
+def image_compose_by2queues(workId):
+    # download all frames
+    print(f"Start Composing {workId}")
+    minio.download_extracted_frames(workId)
+    # perfrom sh script
+    process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} output.gif', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    print(f"Done {workId}")
+    # update state of the job
+    redis_conn.set(workId, "Job Completd")
 
-    print( {
-        "job_id": job.id,
-        "job_enqueued_at": job.enqueued_at.isoformat(),
-        "job_started_at": job.started_at.isoformat(),
-        "input": some_input,
-        "result": some_input,
-    })
+######################### Below this line Using 3 queue (The thrid is Log queue) ################################
+
+def frames_extraction(filename, workId): 
+    # pull video from minio
+    minio.download_video(filename)
+    path = str.split(filename, '.')[0]
+    print(path)
+    # perfrom sh script
+    process = subprocess.Popen(f'sh ./scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    # upload frames back to minio
+    minio.upload_folder("./frames", workId)
+    print(f"extraction {workId} done")
+    # update state of the job
+    job_worker3 = log_queue.enqueue(update__done_status, 1, workId)
+    # push to queue 2
+    job_worker2 = compose_queue.enqueue(image_compose, workId)
+
+
+def image_compose(workId):
+    # download all frames
+    print(f"Start Composing {workId}")
+    minio.download_extracted_frames(workId)
+    # perfrom sh script
+    process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} {workId}.gif', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    print(f"Done {workId}")
+    # update state of the job
+    job_worker3 = log_queue.enqueue(update__done_status, 2, workId)
+
+def update__done_status(worker, workId):
+    if worker == 1:
+        redis_conn.set(workId, "Extracted >> composing")
+    else:
+        redis_conn.set(workId, "Job Completed")
+    print(f"Worker {worker} Done Task Id {workId}")
+
+def update_fail_status(workId):
+    redis_conn.set(workId, "BOOOOOM!!!!!!!")
