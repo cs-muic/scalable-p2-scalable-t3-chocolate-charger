@@ -5,7 +5,7 @@ from unicodedata import name
 from flask import Flask, request, jsonify, render_template, abort
 from flask_caching import Cache
 from flask_minio import Minio
-#from features import *  # TOFIX: this
+from features import *  # TOFIX: this
 from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
 from minioController import minio
 from rq.job import Job
