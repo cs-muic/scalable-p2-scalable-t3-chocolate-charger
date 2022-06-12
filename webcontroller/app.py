@@ -16,12 +16,12 @@ import json
 app = Flask(__name__)
 
 ### Debugging ###
-MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "localhost:9000")
-MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
-MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
-REDIS_HOST = os.getenv("REDIS_HOST", "redis://redis")
-REDIS_PORT = os.getenv("REDIS_PORT", "6379")
-REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
+# MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "localhost:9000")
+# MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
+# MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
+# REDIS_HOST = os.getenv("REDIS_HOST", "redis://localhost")
+# REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+# REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 
 # job id counter
 # we also store this id in the redis

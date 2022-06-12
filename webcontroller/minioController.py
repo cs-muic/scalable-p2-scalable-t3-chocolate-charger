@@ -10,10 +10,16 @@ MINIO_PORT =os.getenv("MINIO_PORT")
 address = str(MINIO_ADDRESS) + ":" + str(MINIO_PORT)
 class minioController:
     def __init__(self):
+    #     self.client = Minio(
+    #     address,
+    #     access_key=MINIO_ACCESS_KEY,
+    #     secret_key=MINIO_SECRET_KEY,
+    #     secure= False
+    # )
         self.client = Minio(
-        address,
-        access_key=MINIO_ACCESS_KEY,
-        secret_key=MINIO_SECRET_KEY,
+        "localhost:9000",
+        access_key="minio",
+        secret_key="minio123",
         secure= False
     )
 
