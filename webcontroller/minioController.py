@@ -7,7 +7,7 @@ MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
 MINIO_PORT =os.getenv("MINIO_PORT")
-address = str(MINIO_ADDRESS) + ":" + str(MINIO_PORT)
+address = str(MINIO_ACCESS_KEY) + ":" + str(MINIO_PORT)
 class minioController:
     def __init__(self):
         self.client = Minio(
