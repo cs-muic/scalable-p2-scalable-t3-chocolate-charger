@@ -51,7 +51,7 @@ def frames_extraction(filename, workId):
     # update state of the job
     job_worker3 = log_queue.enqueue(update__done_status, 1, workId)
     # push to queue 2
-    job_worker2 = compose_queue.enqueue(image_compose, workId)
+    job_worker2 = compose_queue.enqueue(image_compose, workId, )
 
 
 def image_compose(workId):
@@ -62,7 +62,7 @@ def image_compose(workId):
     process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} {workId}.gif', shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(f"Done {workId}")
-    minio.upload_folder(".", f"{workId}.gif")
+    minio.upload_gif(".", f"{workId}.gif")
     # update state of the job
     job_worker3 = log_queue.enqueue(update__done_status, 2, workId)
 
