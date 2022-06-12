@@ -43,8 +43,8 @@ def make_gifs():
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():
     # create unqiue job ID
-    init_job_id = int(redis_conn.get("current_job_id")) + 1
-    redis_conn.set("current_job_id", str(init_job_id+1))
+    init_job_id = int(redis_conn.get("current_job_id"))
+    redis_conn.set("current_job_id", str(init_job_id + 1))
     # set its state to redis
 
     redis_conn.set(init_job_id, "Extracting Frames")
@@ -60,8 +60,8 @@ def make_gif():
 @app.route('/api/make_gif_upload', methods=['POST'])
 def make_gif_upload():
     # create uqiue job ID
-    init_job_id = int(redis_conn.get("current_job_id")) + 1
-    redis_conn.set("current_job_id", str(init_job_id+1))
+    init_job_id = int(redis_conn.get("current_job_id"))
+    redis_conn.set("current_job_id", str(init_job_id + 1))
     # set its state to redis
     redis_conn.set(init_job_id, "Extracting Frames")
 
@@ -100,8 +100,8 @@ def do_bucket():
     
     for i in range(len(lst)):
         # tracking job Id
-        init_job_id = int(redis_conn.get("current_job_id")) + 1
-        redis_conn.set("current_job_id", str(init_job_id+1))
+        init_job_id = int(redis_conn.get("current_job_id"))
+        redis_conn.set("current_job_id", str(init_job_id + 1))
         # enqueue to worker1
         job_worker1 = extract_queue.enqueue(frames_extraction,lst[i], init_job_id)
         to_return[lst[i]] = init_job_id
