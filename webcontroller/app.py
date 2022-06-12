@@ -24,7 +24,8 @@ REDIS_PORT = os.getenv("REDIS_PORT", "6379")
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 
 # job id counter
-# we can also store this id in the redis
+# we also store this id in the redis
+redis_conn.set("current_job_id", "0")
 init_job_id = 0
 
 
@@ -42,10 +43,9 @@ def make_gifs():
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():
     # create unqiue job ID
-    global init_job_id
-    init_job_id += 1
+    init_job_id = int(redis_conn.get("current_job_id")) + 1
+    redis_conn.set("current_job_id", str(init_job_id+1))
     # set its state to redis
-
 
     redis_conn.set(init_job_id, "Extracting Frames")
     uploaded_filename = request.json.get("filename", None)
@@ -60,8 +60,8 @@ def make_gif():
 @app.route('/api/make_gif_upload', methods=['POST'])
 def make_gif_upload():
     # create uqiue job ID
-    global init_job_id
-    init_job_id += 1
+    init_job_id = int(redis_conn.get("current_job_id")) + 1
+    redis_conn.set("current_job_id", str(init_job_id+1))
     # set its state to redis
     redis_conn.set(init_job_id, "Extracting Frames")
 
@@ -97,11 +97,11 @@ def do_bucket():
     lst = minio.list_objects(bucket_name)
     to_return = dict()
 
-    # tracking job Id
-    global init_job_id
     
     for i in range(len(lst)):
-        init_job_id += 1
+        # tracking job Id
+        init_job_id = int(redis_conn.get("current_job_id")) + 1
+        redis_conn.set("current_job_id", str(init_job_id+1))
         # enqueue to worker1
         job_worker1 = extract_queue.enqueue(frames_extraction,lst[i], init_job_id)
         to_return[lst[i]] = init_job_id
