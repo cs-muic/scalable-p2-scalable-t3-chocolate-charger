@@ -39,7 +39,6 @@ def image_compose_by2queues(workId):
 
 def frames_extraction(filename, workId): 
     # pull video from minio
-    print(f"Start extracting {workId}")
     minio.download_video(filename)
     path = str.split(filename, '.')[0]
     print(path)
@@ -52,20 +51,18 @@ def frames_extraction(filename, workId):
     # update state of the job
     job_worker3 = log_queue.enqueue(update__done_status, 1, workId)
     # push to queue 2
-    job_worker2 = compose_queue.enqueue(image_compose, workId)
+    job_worker2 = compose_queue.enqueue(image_compose, workId, job_timeout='1h')
 
 
 def image_compose(workId):
     # download all frames
-    print("1111111111111111111231242151251262156125125125215125215125125")
-    print(f"Start Composing {workId}")
     minio.download_extracted_frames(workId)
     # perfrom sh script
     process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} {workId}.gif', shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(f"Done {workId}")
     # update state of the job
-    minio.upload_gif(".", f"{workId}.gif")
+    minio.upload_gif("./", f"{workId}.gif")
     job_worker3 = log_queue.enqueue(update__done_status, 2, workId)
 
 def update__done_status(worker, workId):

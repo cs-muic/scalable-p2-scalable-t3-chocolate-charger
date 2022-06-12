@@ -41,7 +41,7 @@ def make_gifs():
  
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():
-    # create uqiue job ID
+    # create unqiue job ID
     global init_job_id
     init_job_id += 1
     # set its state to redis
