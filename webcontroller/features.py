@@ -58,11 +58,11 @@ def image_compose(workId):
     # download all frames
     minio.download_extracted_frames(workId)
     # perfrom sh script
-    process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} {workId}.gif', shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} ./gif/{workId}.gif', shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(f"Done {workId}")
     # update state of the job
-    minio.upload_gif("./", f"{workId}.gif")
+    minio.upload_gif(f"./gif/{workId}.gif", f"{workId}.gif")
     job_worker3 = log_queue.enqueue(update__done_status, 2, workId)
 
 def update__done_status(worker, workId):
