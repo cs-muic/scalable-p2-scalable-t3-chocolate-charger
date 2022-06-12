@@ -7,10 +7,15 @@ RUN apt-get update && apt-get install -y ffmpeg
 
 #also install imagemagick
 RUN apt install imagemagick -y
-
-FROM python:3.9
-
-RUN pip install poetry
+RUN apt update
+RUN apt install software-properties-common -y
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt install python3.9 -y
+RUN apt install curl -y
+RUN apt install python3.9-distutils -y
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+RUN python3.9 get-pip.py
+RUN pip3 install poetry
 ADD webcontroller /app 
 
 COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./

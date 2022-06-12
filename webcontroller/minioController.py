@@ -7,11 +7,6 @@ MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
 MINIO_PORT =os.getenv("MINIO_PORT")
-print("##########minio###########")
-print(MINIO_ACCESS_KEY)
-print(MINIO_SECRET_KEY)
-print(MINIO_ADDRESS)
-print("##########include###########")
 address = str(MINIO_ADDRESS) + ":" + str(MINIO_PORT)
 class minioController:
     def __init__(self):
@@ -42,7 +37,7 @@ class minioController:
         else:
             print("Bucket 'frames' already exists")
         # TODO: can we upload the whole folder at once? (performance issue)
-        for i in range(1,201):
+        for i in range(1,51):
             self.client.fput_object(
                 "frames", f"{filename}/image{i}.jpeg", f"{filePath}/image{i}.jpeg"
             )
@@ -69,6 +64,16 @@ class minioController:
         )
 
     
+    def upload_gif(self, filePath, filename):
+        found = self.client.bucket_exists("gif")
+        if not found:
+            self.client.make_bucket("gif")
+        else:
+            print("Bucket 'gif' already exists")
+        self.client.fput_object(
+            "gif", filename, filePath
+        )
+    
     # list of all bucket name
     def list_buckets(self):
         buckets = self.client.list_buckets()
@@ -86,7 +91,7 @@ class minioController:
         self.client.fget_object("video", videoname, f"./temp/{videoname}", request_headers=None)
     
     def download_extracted_frames(self, foldername):
-        for i in range(1, 201):
+        for i in range(1, 51):
           self.client.fget_object("frames", f"{foldername}/image{i}.jpeg", f"./download/{foldername}/image{i}.jpeg", request_headers=None)
 
     # in case we want to download something outside the bucket we controlled

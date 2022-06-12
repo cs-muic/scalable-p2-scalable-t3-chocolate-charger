@@ -41,7 +41,7 @@ def make_gifs():
  
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():
-    # create uqiue job ID
+    # create unqiue job ID
     global init_job_id
     init_job_id += 1
     # set its state to redis
@@ -112,13 +112,6 @@ def do_bucket():
 # api that return a list of buckets (name)
 @app.route('/api/list_bucket', methods=['POST'])
 def list_buckets():
-    print("##########minio###########")
-    print(MINIO_ACCESS_KEY)
-    print(MINIO_SECRET_KEY)
-    print(MINIO_ADDRESS)
-    print("##########include###########")
-    address = str(MINIO_ADDRESS) + ":9000"
-    print(address)
     lst = minio.list_buckets()
     return json.dumps(lst), 200
 
