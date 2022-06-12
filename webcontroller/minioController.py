@@ -42,7 +42,7 @@ class minioController:
         else:
             print("Bucket 'frames' already exists")
         # TODO: can we upload the whole folder at once? (performance issue)
-        for i in range(1,201):
+        for i in range(1,51):
             self.client.fput_object(
                 "frames", f"{filename}/image{i}.jpeg", f"{filePath}/image{i}.jpeg"
             )
@@ -85,7 +85,7 @@ class minioController:
         self.client.fget_object("video", videoname, f"./temp/{videoname}", request_headers=None)
     
     def download_extracted_frames(self, foldername):
-        for i in range(1, 201):
+        for i in range(1, 51):
           self.client.fget_object("frames", f"{foldername}/image{i}.jpeg", f"./download/{foldername}/image{i}.jpeg", request_headers=None)
 
     # in case we want to download something outside the bucket we controlled
