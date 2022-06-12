@@ -9,5 +9,5 @@ from features import *
 
 if __name__ == '__main__':
     with Connection(redis_conn):
-        worker = Worker(composer_queue, connection=redis_conn)
+        worker = Worker(compose_queue, connection=redis_conn)
         worker.work()
