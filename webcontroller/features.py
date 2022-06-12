@@ -63,6 +63,7 @@ def image_compose(workId):
     process.wait()
     print(f"Done {workId}")
     # update state of the job
+    minio.upload_gif(".", f"{workId}.gif")
     job_worker3 = log_queue.enqueue(update__done_status, 2, workId)
 
 def update__done_status(worker, workId):
