@@ -39,6 +39,7 @@ def image_compose_by2queues(workId):
 
 def frames_extraction(filename, workId): 
     # pull video from minio
+    print(f"Start extracting {workId}")
     minio.download_video(filename)
     path = str.split(filename, '.')[0]
     print(path)
@@ -56,6 +57,7 @@ def frames_extraction(filename, workId):
 
 def image_compose(workId):
     # download all frames
+    print("1111111111111111111231242151251262156125125125215125215125125")
     print(f"Start Composing {workId}")
     minio.download_extracted_frames(workId)
     # perfrom sh script
