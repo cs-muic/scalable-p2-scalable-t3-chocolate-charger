@@ -8,7 +8,7 @@ output 2.mp4
 output 2.gif
 output.gif
 extract_workers
-/Users/philippesagon/Desktop/Scalable/P2/scalable-p2-scalable-t3-chocolate-charger/k8s/ghcr-secrets.yaml
+k8s/ghcr-secrets.yaml
 webcontroller/download
 webcontroller/temp
 webcontroller/frames
