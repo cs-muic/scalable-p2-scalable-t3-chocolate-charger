@@ -62,6 +62,7 @@ def image_compose(workId):
     process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} {workId}.gif', shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(f"Done {workId}")
+    minio.upload_folder(".", f"{workId}.gif")
     # update state of the job
     job_worker3 = log_queue.enqueue(update__done_status, 2, workId)
 

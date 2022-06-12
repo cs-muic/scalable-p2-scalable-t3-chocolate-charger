@@ -57,6 +57,17 @@ class minioController:
         self.client.fput_object(
             "video", filename, filePath
         )
+
+    def upload_gif(self, filePath, filename):
+        found = self.client.bucket_exists("gif")
+        if not found:
+            self.client.make_bucket("gif")
+        else:
+            print("Bucket 'gif' already exists")
+        self.client.fput_object(
+            "gif", filename, filePath
+        )
+
     
     # list of all bucket name
     def list_buckets(self):
