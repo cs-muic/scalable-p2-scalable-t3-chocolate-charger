@@ -45,8 +45,13 @@ def make_gif():
     global init_job_id
     init_job_id += 1
     # set its state to redis
+
+
     redis_conn.set(init_job_id, "Extracting Frames")
     uploaded_filename = request.json.get("filename", None)
+
+    # test
+     
     # pass it to worker 1 (enqueue)
     job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
     # return job's ID that we can use it to check the status
@@ -107,13 +112,6 @@ def do_bucket():
 # api that return a list of buckets (name)
 @app.route('/api/list_bucket', methods=['POST'])
 def list_buckets():
-    print("##########minio###########")
-    print(MINIO_ACCESS_KEY)
-    print(MINIO_SECRET_KEY)
-    print(MINIO_ADDRESS)
-    print("##########include###########")
-    address = str(MINIO_ADDRESS) + ":9000"
-    print(address)
     lst = minio.list_buckets()
     return json.dumps(lst), 200
 

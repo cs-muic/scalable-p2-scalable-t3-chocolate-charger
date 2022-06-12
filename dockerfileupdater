@@ -9,12 +9,10 @@ RUN apt-get update && apt-get install -y ffmpeg
 #also install imagemagick
 RUN apt install imagemagick -y
 
-
 FROM python:3.9
 
 RUN pip install poetry
-
-WORKDIR /app
+ADD webcontroller /app 
 
 COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
 RUN poetry install --no-root --no-dev
@@ -24,4 +22,4 @@ RUN poetry install --no-dev
 
 RUN pip install rq
 
-CMD ["rq", "worker", "--url", "redis://redis:6379", "Log"]
+CMD ["poetry", "run", "python3", "logs.py"]

@@ -21,5 +21,6 @@ default_width=480
 default_height=360
 
 mkdir $OUTPUT
+echo $OUTPUT
 
 ffmpeg -i $INPUT -ss $start -t $start.2 -vframes 200 -vf "select='not(mod(n\,10))',scale='if(lt(iw,480),480)':'if(lt(ih,360),360)'" ./$OUTPUT/image%d.jpeg
