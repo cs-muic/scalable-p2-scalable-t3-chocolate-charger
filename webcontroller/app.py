@@ -19,7 +19,7 @@ app = Flask(__name__)
 CORS(app)
 
 ### Debugging ###
-MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minip")
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
 REDIS_HOST = os.getenv("REDIS_HOST", "redis://redis")
