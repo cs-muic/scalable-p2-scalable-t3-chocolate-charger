@@ -9,7 +9,8 @@ export default {
 }
 </script>
 
-
-<li v-for="item in items">
+<template>
+	<li v-for="item in items">
   {{ item.message }}
 </li>
+</template>
