@@ -7,7 +7,7 @@ MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
 MINIO_PORT =os.getenv("MINIO_PORT")
-address = str(MINIO_ADDRESS) + ":" + str(MINIO_PORT)
+address = str(MINIO_ACCESS_KEY) + ":" + str(MINIO_PORT)
 class minioController:
     def __init__(self):
         self.client = Minio(
@@ -52,7 +52,7 @@ class minioController:
         self.client.fput_object(
             "video", filename, filePath
         )
-    
+
     def upload_gif(self, filePath, filename):
         found = self.client.bucket_exists("gif")
         if not found:
@@ -62,7 +62,7 @@ class minioController:
         self.client.fput_object(
             "gif", filename, filePath
         )
-    
+
     # list of all bucket name
     def list_buckets(self):
         buckets = self.client.list_buckets()
@@ -71,6 +71,11 @@ class minioController:
 
     # return all obj in the bucket
     def list_objects(self, bucketname):
+        found = self.client.bucket_exists(bucketname)
+        if not found:
+            self.client.make_bucket(bucketname)
+        else:
+            print(f"Bucket '{bucketname}' already exists")
         objs = self.client.list_objects(bucketname)
         lst = [obj.object_name for obj in objs]
         return lst

@@ -1,6 +1,5 @@
 FROM ubuntu:18.04
 
-
 #install ffmpeg on our ubuntu
 WORKDIR /app
 ENV DEBIAN_FRONTEND=noninteractive
@@ -26,6 +25,8 @@ COPY webcontroller ./
 RUN poetry install --no-dev
 
 RUN pip install rq
+
+RUN pip install ffmpeg-python
 
 CMD ["poetry", "run", "python3", "extract.py"]
 #CMD ["rq", "worker", "--url", "redis://redis:6379", "Extraction"]
