@@ -7,7 +7,7 @@ const List = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const temp = axios.post("http://127.0.0.1:8081/api/list_objs",
+    const temp = axios.get("http://127.0.0.1:8081/api/list_objs",
             {
                 "bucket":"video"
             }

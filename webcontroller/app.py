@@ -16,6 +16,7 @@ import json
 
 
 app = Flask(__name__)
+CORS(app)
 
 ### Debugging ###
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "localhost:9000")
