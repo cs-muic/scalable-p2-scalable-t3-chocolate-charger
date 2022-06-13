@@ -75,7 +75,7 @@ class minioController:
         if not found:
             self.client.make_bucket(bucketname)
         else:
-            print(f"Bucket '{bucketname}' already exists")
+            print(f"Bucket '{bucketname}' already exists")        
         objs = self.client.list_objects(bucketname)
         lst = [obj.object_name for obj in objs]
         return lst
