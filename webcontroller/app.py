@@ -4,7 +4,7 @@ import os
 from unicodedata import name
 from flask import Flask, request, jsonify, render_template, abort
 from flask_caching import Cache
-from flask_minio import Minio
+#from flask_minio import Minio
 from flask_cors import CORS
 from features import *  # TOFIX: this
 from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
@@ -19,7 +19,7 @@ app = Flask(__name__)
 CORS(app)
 
 ### Debugging ###
-MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "localhost:9000")
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minip")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
 REDIS_HOST = os.getenv("REDIS_HOST", "redis://redis")
@@ -57,6 +57,7 @@ def make_gif():
      
     # pass it to worker 1 (enqueue)
     job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
+    url 
     # return job's ID that we can use it to check the status
     return jsonify({"jobId": init_job_id}), 200
 
@@ -76,9 +77,9 @@ def make_gif_upload():
     # pass it to worker 1 (enqueue)
     job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
     # return job's ID that we can use it to check the status
-    return jsonify({"jobId": init_job_id}), 200
+    return jsonify({"jobId": init_job_id,}), 200
 
-@app.route('/api/status', methods=['GET'])
+@app.route('/api/status', methods=['POST'])
 def check_status():
     job_id = request.json.get("jobId", None)
     process = redis_conn.get(job_id)
@@ -87,7 +88,7 @@ def check_status():
     
 
 # api that return a list of objects
-@app.route('/api/list_objs', methods=['GET'])
+@app.route('/api/list_objs', methods=['POST'])
 def list_objects():
     bucket_name = request.json.get("bucket", None)
     lst = minio.list_objects(bucket_name)
@@ -112,6 +113,12 @@ def do_bucket():
     
     return json.dumps(to_return), 200
 
+
+# return all urls of gifs to display 
+@app.route('/api/get_urls', methods=['GET'])
+def test_url():
+    return json.dumps(get_url())
+
 # api that return a list of buckets (name)
 @app.route('/api/list_bucket', methods=['GET'])
 def list_buckets():
@@ -123,6 +130,7 @@ def list_buckets():
 def testing():
     lst = [1,2,3]
     return json.dumps(lst), 200
+
 
 if __name__ == '__main__':
     app.run()
