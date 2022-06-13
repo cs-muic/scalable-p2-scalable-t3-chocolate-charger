@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rq-worker-extract
+  labels:
+    app: rq-worker-extract
+spec:
+  selector:
+    matchLabels:
+      app: rq-worker-extract
+  template:
+    metadata:
+      labels:
+        app: rq-worker-extract
+    spec:
+      containers:
+      - name: rq-worker-extract
+        image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-extract-worker:latest
+        env:
+        - name: MINIO_ADDRESS
+          value: minio.default.svc
+        - name: MINIO_PORT
+          value: "9000"
+        - name: MINIO_ACCESS_KEY
+          valueFrom: 
+            configMapKeyRef:
+                name: minio-configmap
+                key: minio-access-key
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+                name: minio-configmap
+                key: minio-secret-key
+        - name: REDIS_HOST
+          value: redis.default.svc
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          value: ""
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com

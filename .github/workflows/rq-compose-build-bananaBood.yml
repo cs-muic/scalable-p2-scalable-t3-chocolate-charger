@@ -1,0 +1,36 @@
+name: Build compose worker CI
+
+on:
+  push:
+    branches: [ bananaBood ]
+
+env:
+  REGISTRY: ghcr.io
+  BASE_IMG_NAME: ${{ github.repository }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v3
+    - name: Log in to the container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Derive short SHA name
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+    - name: Build the Docker image of rq extraction worker
+      run: |
+        docker build . --file dockerfilecomposeworker \
+        --tag ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-compose-worker:${{ steps.vars.outputs.sha_short }} \
+        --tag ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-compose-worker:latest
+    - name: Publish the images
+      run: | 
+        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-compose-worker:${{ steps.vars.outputs.sha_short }}
+        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-compose-worker:latest

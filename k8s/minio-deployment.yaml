@@ -50,6 +50,7 @@ spec:
               key: minio-secret-key
         ports:
         - containerPort: 9000
+          # name: minio-port
         # Readiness probe detects situations when MinIO server instance
         # is not ready to accept traffic. Kubernetes doesn't forward
         # traffic to the pod while readiness checks fail.

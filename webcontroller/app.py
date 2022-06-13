@@ -4,71 +4,132 @@ import os
 from unicodedata import name
 from flask import Flask, request, jsonify, render_template, abort
 from flask_caching import Cache
-from flask_minio import Minio
+#from flask_minio import Minio
+from flask_cors import CORS
 from features import *  # TOFIX: this
-from redisConnection import redis_conn, extract_queue, compose_queue
+from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
 from minioController import minio
 from rq.job import Job
 import redis
 from rq import Connection, Queue, Worker
+import json
+
 
 app = Flask(__name__)
-MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
+CORS(app)
+
+### Debugging ###
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
-# REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-# REDIS_PORT = os.getenv("REDIS_PORT", "6379")
-# REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
+MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
+REDIS_HOST = os.getenv("REDIS_HOST", "redis://redis")
+REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 
-class Pocket:
-    def __init__(self, filename, path, minio):
-        self.filename = filename
-        self.path = path
-        self.jobId = -1 # before entering the queue
-        self.minio = minio
-    
+# job id counter
+# we can also store this id in the redis
+init_job_id = 0
 
-# CHECKING REDIS CONNECTION, DON'T DELETE
-# try:
-#     response = redis_connection.client_list()
-#     print(response)
-# except redis.ConnectionError:
-#     #your error handlig code here 
-#     print("error")
 
+@app.route('/api/make_gifs', methods=['POST'])
+def make_gifs():
+    bucket_name = request.json.get("bucket", None) #retrieve bucket name
+    objects = minio.list_objects(bucket_name) #get all objects
+    for obj in objects:
+        job_worker1 = extract_queue.enqueue(frames_extraction, obj, bucket_name)
+        job_id = job_worker1.id
+        job_worker2 = compose_queue.enqueue(image_compose, job_id, depends_on=job_worker1)
+
+    return jsonify({"bucket": bucket_name, "status": "working", "job_id":job_id}), 200
+ 
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():
+    # create unqiue job ID
+    global init_job_id
+    init_job_id += 1
+    # set its state to redis
+
+
+    redis_conn.set(init_job_id, "Extracting Frames")
+    uploaded_filename = request.json.get("filename", None)
+
+    # test
+     
+    # pass it to worker 1 (enqueue)
+    job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
+    url 
+    # return job's ID that we can use it to check the status
+    return jsonify({"jobId": init_job_id}), 200
+
+@app.route('/api/make_gif_upload', methods=['POST'])
+def make_gif_upload():
+    # create uqiue job ID
+    global init_job_id
+    init_job_id += 1
+    # set its state to redis
+    redis_conn.set(init_job_id, "Extracting Frames")
+
     uploaded_path = request.json.get("path", None)
     uploaded_filename = request.json.get("filename", None)
-    pocket = Pocket(filename=uploaded_filename, path=uploaded_path, minio=minio)
-    minio.upload_video(pocket.path, pocket.filename)
-    job_worker1 = extract_queue.enqueue(frames_extraction, pocket.filename)
-    job_id = job_worker1.id
-    job_worker2 = compose_queue.enqueue(image_compose, job_id, depends_on=job_worker1)
 
+    # upload that video
+    minio.upload_video(uploaded_path, uploaded_filename)
+    # pass it to worker 1 (enqueue)
+    job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
+    # return job's ID that we can use it to check the status
+    return jsonify({"jobId": init_job_id,}), 200
 
-    # workers = Worker.all(queue=extract_queue)
-    # workers.work()
+@app.route('/api/status', methods=['POST'])
+def check_status():
+    job_id = request.json.get("jobId", None)
+    process = redis_conn.get(job_id)
+    print(str(process))
+    return jsonify({"process": str(process)}), 200
     
-    # w = Worker([extract_queue], connection=redis_conn)
-    # try:
-    #     w.work()
-    # except:
-    #     print("An exception occurred")
+
+# api that return a list of objects
+@app.route('/api/list_objs', methods=['POST'])
+def list_objects():
+    bucket_name = request.json.get("bucket", None)
+    lst = minio.list_objects(bucket_name)
+    return json.dumps(lst), 200
+
+# creates multiple jobs for all videos in the bucket
+@app.route('/api/doing_bucket', methods=['POST'])
+def do_bucket():
+    bucket_name = request.json.get("bucket", None)
+    lst = minio.list_objects(bucket_name)
+    to_return = dict()
+
+    # tracking job Id
+    global init_job_id
+    
+    for i in range(len(lst)):
+        init_job_id += 1
+        # enqueue to worker1
+        job_worker1 = extract_queue.enqueue(frames_extraction,lst[i], init_job_id)
+        to_return[lst[i]] = init_job_id
+    
+    
+    return json.dumps(to_return), 200
 
 
-    print(job_worker1.get_status())
-    return jsonify({"job": job_worker1.id}), 200
+# return all urls of gifs to display 
+@app.route('/api/get_urls', methods=['GET'])
+def test_url():
+    return json.dumps(get_url())
 
+# api that return a list of buckets (name)
+@app.route('/api/list_bucket', methods=['GET'])
+def list_buckets():
+    lst = minio.list_buckets()
+    return json.dumps(lst), 200
 
-
-@app.route('/api/listbucket', methods=['POST'])
-def listing_buckets():
-    # path = request.json.get("path", None)
-    minio.list_buckets()
-    return jsonify({"OK": "listing"}), 200
-
-
-
+################ Testing API ###################
+@app.route('/api/testing', methods=['POST'])
+def testing():
+    lst = [1,2,3]
+    return json.dumps(lst), 200
 
 
 if __name__ == '__main__':

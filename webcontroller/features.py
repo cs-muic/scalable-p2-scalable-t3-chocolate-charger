@@ -4,49 +4,78 @@ import time
 from rq import get_current_job
 from minioController import minio
 import subprocess
+from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
 
-def notify_queue(str):
-    print(str)
 
-def frames_extraction(filename): 
-
-    job = get_current_job()
-
+def frames_extraction_by2queues(filename, workId): 
+    # pull video from minio
     minio.download_video(filename)
     path = str.split(filename, '.')[0]
     print(path)
-    #####
-    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
+    # perfrom sh script
+    process = subprocess.Popen(f'sh ./scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
     process.wait()
-    #####
-    # os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/extract.sh ./temp/{filename} frames') # TOFIX: harcode and path
-    print("extraction DONEEEEEEEEEEEEEE")
-    minio.upload_folder("./frames", job.id)
-    print("work done eieiei !!!!!")
-    return path
+    # upload frames back to minio
+    minio.upload_folder("./frames", workId)
+    print(f"extraction {workId} done")
+    # update state of the job
+    redis_conn.set(workId, "Extracted Done >> Now Composing")
+    # push to queue 2
+    job_worker2 = compose_queue.enqueue(image_compose, workId)
 
 
-def image_compose(jobId):
-    #download all frames
-    print("debugging")
-    minio.download_extracted_frames(jobId)
-    #####
-    process = subprocess.Popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./download/{jobId} output.gif', shell=True, stdout=subprocess.PIPE)
+def image_compose_by2queues(workId):
+    # download all frames
+    print(f"Start Composing {workId}")
+    minio.download_extracted_frames(workId)
+    # perfrom sh script
+    process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} output.gif', shell=True, stdout=subprocess.PIPE)
     process.wait()
-    #####
-    # os.popen(f'sh /Users/marcmarkcat/Desktop/Study/scalable/P2/scalable-p2-scalable-t3-chocolate-charger/scripts/compose.sh ./temp/{filename} frames') # TOFIX: harcode and path
+    print(f"Done {workId}")
+    # update state of the job
+    redis_conn.set(workId, "Job Completd")
+
+######################### Below this line Using 3 queue (The thrid is Log queue) ################################
+
+def frames_extraction(filename, workId): 
+    # pull video from minio
+    minio.download_video(filename)
+    path = str.split(filename, '.')[0]
+    print(path)
+    # perfrom sh script
+    process = subprocess.Popen(f'sh ./scripts/extract.sh ./temp/{filename} frames', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    # upload frames back to minio
+    minio.upload_folder("./frames", workId)
+    print(f"extraction {workId} done")
+    # update state of the job
+    job_worker3 = log_queue.enqueue(update__done_status, 1, workId)
+    # push to queue 2
+    job_worker2 = compose_queue.enqueue(image_compose, workId, job_timeout='1h')
 
 
+def image_compose(workId):
+    # download all frames
+    minio.download_extracted_frames(workId)
+    # perfrom sh script
+    process = subprocess.Popen(f'sh ./scripts/compose.sh ./download/{workId} {workId}.gif', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    print(f"Done {workId}")
+    # update state of the job and get url
+    minio.upload_gif(f"./{workId}.gif", f"{workId}.gif")
+    job_worker3 = log_queue.enqueue(update__done_status, 2, workId)
 
-def some_long_function(some_input):
-    """An example function for redis queue."""
-    job = get_current_job()
-    time.sleep(10)
 
-    print( {
-        "job_id": job.id,
-        "job_enqueued_at": job.enqueued_at.isoformat(),
-        "job_started_at": job.started_at.isoformat(),
-        "input": some_input,
-        "result": some_input,
-    })
+def get_url():
+    return minio.get_gif_urls()
+
+
+def update__done_status(worker, workId):
+    if worker == 1:
+        redis_conn.set(workId, "Extracted >> composing")
+    else:
+        redis_conn.set(workId, "Job Completed")
+    print(f"Worker {worker} Done Task Id {workId}")
+
+def update_fail_status(workId):
+    redis_conn.set(workId, "BOOOOOM!!!!!!!")

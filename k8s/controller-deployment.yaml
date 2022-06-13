@@ -5,7 +5,7 @@ metadata:
   labels:
     app: controller
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: controller
@@ -19,6 +19,10 @@ spec:
         image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-backend:latest
         imagePullPolicy: Always
         env:
+        - name: MINIO_ADDRESS
+          value: minio.default.svc
+        - name: MINIO_PORT
+          value: "9000"
         - name: MINIO_ACCESS_KEY
           valueFrom: 
             configMapKeyRef:
@@ -29,5 +33,11 @@ spec:
             configMapKeyRef:
                 name: minio-configmap
                 key: minio-secret-key
+        - name: REDIS_HOST
+          value: redis.default.svc
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          value: ""
       imagePullSecrets:
       - name: dockerconfigjson-github-com
