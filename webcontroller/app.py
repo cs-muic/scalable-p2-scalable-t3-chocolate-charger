@@ -14,6 +14,7 @@ import redis
 from rq import Connection, Queue, Worker
 import json
 
+
 app = Flask(__name__)
 
 ### Debugging ###
