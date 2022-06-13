@@ -5,6 +5,7 @@ from unicodedata import name
 from flask import Flask, request, jsonify, render_template, abort
 from flask_caching import Cache
 from flask_minio import Minio
+from flask_cors import CORS
 from features import *  # TOFIX: this
 from redisConnection import redis_conn, extract_queue, compose_queue, log_queue
 from minioController import minio
@@ -75,7 +76,7 @@ def make_gif_upload():
     # return job's ID that we can use it to check the status
     return jsonify({"jobId": init_job_id}), 200
 
-@app.route('/api/status', methods=['POST'])
+@app.route('/api/status', methods=['GET'])
 def check_status():
     job_id = request.json.get("jobId", None)
     process = redis_conn.get(job_id)
@@ -84,7 +85,7 @@ def check_status():
     
 
 # api that return a list of objects
-@app.route('/api/list_objs', methods=['POST'])
+@app.route('/api/list_objs', methods=['GET'])
 def list_objects():
     bucket_name = request.json.get("bucket", None)
     lst = minio.list_objects(bucket_name)
@@ -110,7 +111,7 @@ def do_bucket():
     return json.dumps(to_return), 200
 
 # api that return a list of buckets (name)
-@app.route('/api/list_bucket', methods=['POST'])
+@app.route('/api/list_bucket', methods=['GET'])
 def list_buckets():
     lst = minio.list_buckets()
     return json.dumps(lst), 200

@@ -9,8 +9,8 @@ export default {
 }
 </script>
 
-<template>
+<div>
 	<li v-for="item in items">
-  {{ item.message }}
+  {{ item.message }} 
 </li>
-</template>
+</div>
