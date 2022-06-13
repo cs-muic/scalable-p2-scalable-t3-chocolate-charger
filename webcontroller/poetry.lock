@@ -98,6 +98,18 @@ cachelib = "*"
 Flask = "*"
 
 [[package]]
+name = "flask-cors"
+version = "3.0.10"
+description = "A Flask extension adding a decorator for CORS support"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Flask = ">=0.9"
+Six = "*"
+
+[[package]]
 name = "flask-minio"
 version = "0.1.2"
 description = "Adds Minio support to your Flask application"
@@ -259,6 +271,14 @@ click = ">=5.0.0"
 redis = ">=3.5.0"
 
 [[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
 name = "urllib3"
 version = "1.26.9"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -305,7 +325,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "2850987aab86f3436e951899e26f9e64533a9dc76ba38a3ad183b423cd97d1ee"
+content-hash = "025dbe19caa1a5589543d2865aa0a936eecc03dc70268c705aad2dde689b14a8"
 
 [metadata.files]
 async-timeout = [
@@ -343,6 +363,10 @@ flask = [
 flask-caching = [
     {file = "Flask-Caching-1.11.1.tar.gz", hash = "sha256:28af189e97defb9e39b43ebe197b54a58aaee81bdeb759f46d969c26d7aa7810"},
     {file = "Flask_Caching-1.11.1-py3-none-any.whl", hash = "sha256:36592812eec6cba86eca48bcda74eff24bfd6c8eaf6056ca0184474bb78c0dc4"},
+]
+flask-cors = [
+    {file = "Flask-Cors-3.0.10.tar.gz", hash = "sha256:b60839393f3b84a0f3746f6cdca56c1ad7426aa738b70d6c61375857823181de"},
+    {file = "Flask_Cors-3.0.10-py2.py3-none-any.whl", hash = "sha256:74efc975af1194fc7891ff5cd85b0f7478be4f7f59fe158102e91abb72bb4438"},
 ]
 flask-minio = [
     {file = "Flask-Minio-0.1.2.tar.gz", hash = "sha256:8d02743b6ac349b6350ac747d2088fcdf0022d640f73814899cf3a8f3bf08e28"},
@@ -433,6 +457,10 @@ requests = [
 rq = [
     {file = "rq-1.10.1-py2.py3-none-any.whl", hash = "sha256:92f4cf38b2364c1697b541e77c0fe62b7e5242fa864324f262be126ee2a07e3a"},
     {file = "rq-1.10.1.tar.gz", hash = "sha256:62d06b44c3acfa5d1933c5a4ec3fbc2484144a8af60e318d0b8447c5236271e2"},
+]
+six = [
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.9-py2.py3-none-any.whl", hash = "sha256:44ece4d53fb1706f667c9bd1c648f5469a2ec925fcf3a776667042d645472c14"},

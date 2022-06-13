@@ -12,8 +12,8 @@ class minioController:
     def __init__(self):
         self.client = Minio(
         address,
-        access_key=MINIO_ACCESS_KEY,
-        secret_key=MINIO_SECRET_KEY,
+        access_key="minio",
+        secret_key="minio123",
         secure= False
     )
 
@@ -59,9 +59,16 @@ class minioController:
             self.client.make_bucket("gif")
         else:
             print("Bucket 'gif' already exists")
+
         self.client.fput_object(
             "gif", filename, filePath
         )
+
+    #get url of an object
+    def get_gif_urls(self): #make this go through all bucket "gif"
+        gifs = self.list_objects("gif") 
+        url_lists = [self.client.presigned_get_object("gif", gif) for gif in gifs]
+        return url_lists
 
     # list of all bucket name
     def list_buckets(self):
@@ -75,7 +82,7 @@ class minioController:
         if not found:
             self.client.make_bucket(bucketname)
         else:
-            print(f"Bucket '{bucketname}' already exists")
+            print(f"Bucket '{bucketname}' already exists")        
         objs = self.client.list_objects(bucketname)
         lst = [obj.object_name for obj in objs]
         return lst
