@@ -1,0 +1,29 @@
+FROM node:16 as builder
+## Stage 1: Build the frontend
+
+CMD mkdir /app
+
+## Set the working directory
+WORKDIR /app
+
+## Copy the package specifications
+# COPY frontend-react/my-app/package*.json frontend-react/my-app/webpack*.js ./
+COPY frontend-react/my-app ./
+## Install all relevant dependencies
+RUN npm install
+
+# nginx state for serving content
+FROM nginx:alpine
+# Set working directory to nginx asset directory
+WORKDIR /usr/share/nginx/html
+# Remove default nginx static assets
+RUN rm -rf ./*
+# Copy static assets from builder stage
+COPY --from=builder /app/build .
+# Containers run nginx with global directives and daemon off
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+
+
+# COMMAND TO RUN in LOCAL #
+# docker build -f dockerfilefrontend -t p2-frontend .
+# docker run --rm -it -p 8080:80 p2-frontend 

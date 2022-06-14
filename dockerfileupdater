@@ -1,0 +1,30 @@
+FROM ubuntu:18.04
+
+
+#install ffmpeg on our ubuntu
+WORKDIR /app
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y ffmpeg
+
+#also install imagemagick
+RUN apt install imagemagick -y
+RUN apt update
+RUN apt install software-properties-common -y
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt install python3.9 -y
+RUN apt install curl -y
+RUN apt install python3.9-distutils -y
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+RUN python3.9 get-pip.py
+RUN pip3 install poetry
+ADD webcontroller /app 
+
+COPY webcontroller/pyproject.toml webcontroller/poetry.lock ./
+RUN poetry install --no-root --no-dev
+
+COPY webcontroller ./
+RUN poetry install --no-dev
+
+RUN pip install rq
+
+CMD ["poetry", "run", "python3", "logs.py"]

@@ -1,0 +1,14 @@
+footages
+target
+out.mp4
+out 2.mp4
+sample.mp4
+output.mp4
+output 2.mp4
+output 2.gif
+output.gif
+extract_workers
+k8s/ghcr-secrets.yaml
+webcontroller/download
+webcontroller/temp
+webcontroller/frames
