@@ -83,8 +83,8 @@ def make_gif_upload():
 def check_status():
     job_id = request.json.get("jobId", None)
     process = redis_conn.get(job_id)
-    print(str(process))
-    return jsonify({"process": str(process)}), 200
+    print(process.decode("utf-8"))
+    return jsonify({"process": process.decode("utf-8")}), 200
     
 
 # api that return a list of objects
@@ -122,7 +122,7 @@ def get_status():
     cur_job_id = get_cur()
     dic = {}
     for job_id in range(cur_job_id + 1):
-        dic[job_id] = str(redis_conn.get(job_id))
+        dic[job_id] = redis_conn.get(job_id).decode("utf-8")
     # ids = [[str(job_id), str(redis_conn.get(job_id))} for job_id in range(cur_job_id + 1)]
     return jsonify(dic)
 
