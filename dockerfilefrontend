@@ -10,5 +10,5 @@ COPY frontend-react/my-app .
 
 
 FROM nginx:1.19.0
-COPY --from=builder /appbuild /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html
 
