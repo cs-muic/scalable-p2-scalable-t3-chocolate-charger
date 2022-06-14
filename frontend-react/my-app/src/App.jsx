@@ -7,6 +7,7 @@ function App() {
   return (
     <>
       <List/>
+      <h3>STATUS UPDATE</h3>
       <Status/>
       <GIFS/>
 
