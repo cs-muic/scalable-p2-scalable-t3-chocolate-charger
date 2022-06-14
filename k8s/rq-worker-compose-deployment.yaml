@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
       - name: rq-worker-compose
-        image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-compose-worker:latest
+        # image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-compose-worker:latest
+        image: ghcr.io/marcarisen/p2-choco-charger-compose-worker:latest
         env:
         - name: MINIO_ADDRESS
           value: minio.default.svc
