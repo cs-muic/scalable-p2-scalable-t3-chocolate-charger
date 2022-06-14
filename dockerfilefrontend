@@ -1,42 +1,46 @@
-# FROM node:16 as builder
-# ## Stage 1: Build the frontend
+FROM node:16 as builder
+## Stage 1: Build the frontend
 
-# CMD mkdir /app
+CMD mkdir /app
 
-# ## Set the working directory
-# WORKDIR /app
+## Set the working directory
+WORKDIR /app
 
-# ## Copy the package specifications
-# # COPY frontend-react/my-app/package*.json frontend-react/my-app/webpack*.js ./
-# COPY frontend-react/my-app ./
-# ## Install all relevant dependencies
-# RUN npm install
-# RUN npm run build
-# # nginx state for serving content
-# FROM nginx:alpine
-# # Set working directory to nginx asset directory
+## Copy the package specifications
+# COPY frontend-react/my-app/package*.json frontend-react/my-app/webpack*.js ./
+COPY frontend-react/my-app ./
+## Install all relevant dependencies
+RUN npm install
+RUN npm run build
+# nginx state for serving content
+FROM nginx:1.15
+# Set working directory to nginx asset directory
 # WORKDIR /usr/share/nginx/html
-# # Remove default nginx static assets
+# Remove default nginx static assets
 # RUN rm -rf ./*
-# # Copy static assets from builder stage
+# Copy static assets from builder stage
 # COPY --from=builder /app/build .
-# # Containers run nginx with global directives and daemon off
-# ENTRYPOINT ["nginx", "-g", "daemon off;"]
+COPY --from=build-stage /app/build/ /usr/share/nginx/html
+# Copy the default nginx.conf provided by tiangolo/node-frontend
+COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
+
+# Containers run nginx with global directives and daemon off
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
 
 
 # COMMAND TO RUN in LOCAL #
 # docker build -f dockerfilefrontend -t p2-frontend .
 # docker run --rm -it -p 8080:80 p2-frontend 
 
-# Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM tiangolo/node-frontend:10 as build-stage
-WORKDIR /app
-COPY frontend-react/my-app/package*.json /app/
-RUN npm install
-COPY frontend-react/my-app /app/
-RUN npm run build
-# Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx:1.15
-COPY --from=build-stage /app/build/ /usr/share/nginx/html
-# Copy the default nginx.conf provided by tiangolo/node-frontend
-COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
+# # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
+# FROM tiangolo/node-frontend:10 as build-stage
+# WORKDIR /app
+# COPY frontend-react/my-app/package*.json /app/
+# RUN npm install
+# COPY frontend-react/my-app /app/
+# RUN npm run build
+# # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
+# FROM nginx:1.15
+# COPY --from=build-stage /app/build/ /usr/share/nginx/html
+# # Copy the default nginx.conf provided by tiangolo/node-frontend
+# COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
