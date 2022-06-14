@@ -28,4 +28,4 @@ spec:
           service:
             name: frontend
             port:
-              number: 81
+              number: 3000
