@@ -5,7 +5,7 @@ import redis
 from rq import Queue
 
 redis_conn = redis.Redis(
-    host=os.getenv("REDIS_HOST", "0.0.0.0"), #redis://redis
+    host=os.getenv("REDIS_HOST", "redis://redis"), #redis://redis
     port=os.getenv("REDIS_PORT", "6379"),
     password=os.getenv("REDIS_PASSWORD", ""),
 )

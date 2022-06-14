@@ -11,7 +11,7 @@ address = str(MINIO_ACCESS_KEY) + ":" + str(MINIO_PORT)
 class minioController:
     def __init__(self):
         self.client = Minio(
-        "localhost:9000", #minio
+        address, #minio
         access_key="minio",
         secret_key="minio123",
         secure= False
