@@ -15,6 +15,7 @@ const List = () => {
         ).then(res => {
             console.log(res);
             temp2 = res.data;
+            console.log(typeof(temp2))
             setVidnames(temp2);
           })
           .catch(err => {
@@ -44,12 +45,6 @@ const List = () => {
 
     
     return (
-        // <div id='listbox-control'>
-        //     <h4>Select your favorite car:</h4>
-        //     <ListBox>
-        //         {vidnames.map((vid) => <li>{vid}</li>)}
-        //     </ListBox>
-        // </div>
             <ul>
                 {vidnames.map((vid) => <h1 onClick={() => sentRequest(vid)}>{vid}</h1>)}
             </ul>

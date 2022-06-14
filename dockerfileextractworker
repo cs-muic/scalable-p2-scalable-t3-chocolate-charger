@@ -29,4 +29,3 @@ RUN pip install rq
 RUN pip install ffmpeg-python
 
 CMD ["poetry", "run", "python3", "extract.py"]
-#CMD ["rq", "worker", "--url", "redis://redis:6379", "Extraction"]

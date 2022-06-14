@@ -21,9 +21,9 @@ def frames_extraction(filename, workId):
     minio.upload_folder("./frames", workId)
     print(f"extraction {workId} done")
     # update state of the job
-    job_worker3 = log_queue.enqueue(update__done_status, 1, workId, filename)
+    job_worker3 = log_queue.enqueue(update_done_status, worker=1, workId=workId, videonames=filename)
     # push to queue 2
-    job_worker2 = compose_queue.enqueue(image_compose, workId, filename, job_timeout='1h')
+    job_worker2 = compose_queue.enqueue(image_compose, workId=workId, filename=filename, job_timeout='1h', on_failure=update_fail_status)
 
 
 def image_compose(workId, filename):
@@ -35,7 +35,7 @@ def image_compose(workId, filename):
     print(f"Done {workId}")
     # update state of the job and get url
     minio.upload_gif(f"./{workId}.gif", f"{workId}.gif")
-    job_worker3 = log_queue.enqueue(update__done_status, 2, workId, filename)
+    job_worker3 = log_queue.enqueue(update_done_status, worker=2, workId=workId, videonames=filename)
 
 
 def get_url():
@@ -45,12 +45,17 @@ def get_cur():
     return int(redis_conn.get("current_job_id"))
 
 
-def update__done_status(worker, workId, videonames):
+def update_done_status(worker, workId, videonames):
     if worker == 1:
         redis_conn.set(workId, f"Extracted >> composing, {videonames}")
     else:
         redis_conn.set(workId, f"Job Completed, {videonames}")
     print(f"Worker {worker} Done Task Id {workId}")
 
-def update_fail_status(workId):
-    redis_conn.set(workId, f"Failed, {videonames}")
+def update_fail_status(job, connection, *args, **kwargs):
+    filename = str(job.kwargs["filename"])
+    workId = str(job.kwargs["workId"])
+    print("work id : " + str(workId))
+    print("filename :" + str(filename))
+    redis_conn.set(workId, f"Failed, {filename}")
+

@@ -18,31 +18,10 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-### Debugging ###
-#MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
-MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "localhost:9000")
-MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
-MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
-REDIS_HOST = os.getenv("REDIS_HOST", "redis://redis")
-REDIS_PORT = os.getenv("REDIS_PORT", "6379")
-REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
-
 # job id counter
 # we can also store this id in the redis
 redis_conn.set("current_job_id", "0")
 init_job_id = int(redis_conn.get("current_job_id"))
-
-
-@app.route('/api/make_gifs', methods=['POST'])
-def make_gifs():
-    bucket_name = request.json.get("bucket", None) #retrieve bucket name
-    objects = minio.list_objects(bucket_name) #get all objects
-    for obj in objects:
-        job_worker1 = extract_queue.enqueue(frames_extraction, obj, bucket_name)
-        job_id = job_worker1.id
-        job_worker2 = compose_queue.enqueue(image_compose, job_id, depends_on=job_worker1)
-
-    return jsonify({"bucket": bucket_name, "status": "working", "job_id":job_id}), 200
  
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():
@@ -52,10 +31,10 @@ def make_gif():
     # set its state to redis
 
     uploaded_filename = request.json.get("filename", None)
-    redis_conn.set(init_job_id, "Extracting Frames, {upload_filename}")
+    redis_conn.set(init_job_id, f"Extracting Frames, {uploaded_filename}")
 
     # pass it to worker 1 (enqueue)
-    job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
+    job_worker1 = extract_queue.enqueue(frames_extraction,filename=uploaded_filename, workId=init_job_id, on_failure=update_fail_status)
     # return job's ID that we can use it to check the status
     return jsonify({"jobId": init_job_id}), 200
 
@@ -65,15 +44,13 @@ def make_gif_upload():
     init_job_id = int(redis_conn.get("current_job_id"))
     redis_conn.set("current_job_id", str(init_job_id + 1))
     # set its state to redis
-    redis_conn.set(init_job_id, "Extracting Frames")
-
     uploaded_path = request.json.get("path", None)
     uploaded_filename = request.json.get("filename", None)
-
+    redis_conn.set(init_job_id, f"Extracting Frames, {uploaded_filename}")
     # upload that video
     minio.upload_video(uploaded_path, uploaded_filename)
     # pass it to worker 1 (enqueue)
-    job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
+    job_worker1 = extract_queue.enqueue(frames_extraction,filename=uploaded_filename, workId=init_job_id, on_failure=update_fail_status)
     # return job's ID that we can use it to check the status
     return jsonify({"jobId": init_job_id,}), 200
 
@@ -99,31 +76,26 @@ def do_bucket():
     bucket_name = request.json.get("bucket", None)
     lst = minio.list_objects(bucket_name)
     to_return = dict()
-
-    # tracking job Id
-    global init_job_id
     
     for i in range(len(lst)):
         init_job_id = int(redis_conn.get("current_job_id"))
+        redis_conn.set(init_job_id, f"Extracting Frames, {lst[i]}")
         redis_conn.set("current_job_id", str(init_job_id + 1))
         # enqueue to worker1
-        job_worker1 = extract_queue.enqueue(frames_extraction,lst[i], init_job_id)
+        job_worker1 = extract_queue.enqueue(frames_extraction,filename=lst[i], workId=init_job_id, on_failure=update_fail_status)
         to_return[lst[i]] = init_job_id
     
     
     return json.dumps(to_return), 200
 
-
-#{0: [status, video_name]}
-# FIX
 @app.route('/api/get_status', methods=["GET"])
 def get_status():
     cur_job_id = get_cur()
-    dic = {}
-    for job_id in range(cur_job_id + 1):
-        dic[job_id] = redis_conn.get(job_id).decode("utf-8")
-    # ids = [[str(job_id), str(redis_conn.get(job_id))} for job_id in range(cur_job_id + 1)]
-    return jsonify(dic)
+    to_return = []
+    for job_id in range(cur_job_id):
+        process = str(redis_conn.get(job_id).decode("utf-8"))
+        to_return.append(str(job_id) +": " + process)
+    return json.dumps(to_return)
 
 # return all urls of gifs to display 
 @app.route('/api/get_urls', methods=['GET'])
@@ -134,12 +106,6 @@ def get_urls():
 @app.route('/api/list_bucket', methods=['GET'])
 def list_buckets():
     lst = minio.list_buckets()
-    return json.dumps(lst), 200
-
-################ Testing API ###################
-@app.route('/api/testing', methods=['POST'])
-def testing():
-    lst = [1,2,3]
     return json.dumps(lst), 200
 
 

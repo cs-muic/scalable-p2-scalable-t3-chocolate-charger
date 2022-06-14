@@ -11,7 +11,7 @@ WORKDIR /app
 COPY frontend-react/my-app ./
 ## Install all relevant dependencies
 RUN npm install
-
+RUN npm run build
 # nginx state for serving content
 FROM nginx:alpine
 # Set working directory to nginx asset directory
