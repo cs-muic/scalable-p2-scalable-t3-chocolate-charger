@@ -2,7 +2,7 @@ FROM node:12.2.0-alpine as react_build
 #also say 
 WORKDIR /app
 #copy the react app to the container
-COPY frontend-react/my-app/ /app/ 
+COPY frontend-react/my-app .
 
 # #prepare the contiainer for building react 
 RUN npm install
