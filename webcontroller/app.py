@@ -19,7 +19,8 @@ app = Flask(__name__)
 CORS(app)
 
 ### Debugging ###
-MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
+#MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "localhost:9000")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
 REDIS_HOST = os.getenv("REDIS_HOST", "redis://redis")
@@ -28,7 +29,8 @@ REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 
 # job id counter
 # we can also store this id in the redis
-init_job_id = 0
+redis_conn.set("current_job_id", "0")
+init_job_id = int(redis_conn.get("current_job_id"))
 
 
 @app.route('/api/make_gifs', methods=['POST'])
@@ -45,27 +47,24 @@ def make_gifs():
 @app.route('/api/make_gif', methods=['POST'])
 def make_gif():
     # create unqiue job ID
-    global init_job_id
-    init_job_id += 1
+    init_job_id = int(redis_conn.get("current_job_id"))
+    redis_conn.set("current_job_id", str(init_job_id + 1))
     # set its state to redis
 
 
     redis_conn.set(init_job_id, "Extracting Frames")
     uploaded_filename = request.json.get("filename", None)
 
-    # test
-     
     # pass it to worker 1 (enqueue)
     job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)
-    url 
     # return job's ID that we can use it to check the status
     return jsonify({"jobId": init_job_id}), 200
 
 @app.route('/api/make_gif_upload', methods=['POST'])
 def make_gif_upload():
     # create uqiue job ID
-    global init_job_id
-    init_job_id += 1
+    init_job_id = int(redis_conn.get("current_job_id"))
+    redis_conn.set("current_job_id", str(init_job_id + 1))
     # set its state to redis
     redis_conn.set(init_job_id, "Extracting Frames")
 
@@ -79,6 +78,7 @@ def make_gif_upload():
     # return job's ID that we can use it to check the status
     return jsonify({"jobId": init_job_id,}), 200
 
+#FIX
 @app.route('/api/status', methods=['POST'])
 def check_status():
     job_id = request.json.get("jobId", None)
@@ -105,7 +105,8 @@ def do_bucket():
     global init_job_id
     
     for i in range(len(lst)):
-        init_job_id += 1
+        init_job_id = int(redis_conn.get("current_job_id"))
+        redis_conn.set("current_job_id", str(init_job_id + 1))
         # enqueue to worker1
         job_worker1 = extract_queue.enqueue(frames_extraction,lst[i], init_job_id)
         to_return[lst[i]] = init_job_id
@@ -114,9 +115,20 @@ def do_bucket():
     return json.dumps(to_return), 200
 
 
+#{0: [status, video_name]}
+# FIX
+@app.route('/api/get_status', methods=["GET"])
+def get_status():
+    cur_job_id = get_cur()
+    dic = {}
+    for job_id in range(cur_job_id + 1):
+        dic[job_id] = str(redis_conn.get(job_id))
+    # ids = [[str(job_id), str(redis_conn.get(job_id))} for job_id in range(cur_job_id + 1)]
+    return jsonify(dic)
+
 # return all urls of gifs to display 
 @app.route('/api/get_urls', methods=['GET'])
-def test_url():
+def get_urls():
     return json.dumps(get_url())
 
 # api that return a list of buckets (name)

@@ -7,8 +7,8 @@ function App() {
   return (
     <>
       <List/>
-      {/* <Status/> */}
-      {/* <GIFS/> */}
+      <Status/>
+      <GIFS/>
 
     </>
      

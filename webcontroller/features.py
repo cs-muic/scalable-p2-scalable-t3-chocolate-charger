@@ -69,6 +69,9 @@ def image_compose(workId):
 def get_url():
     return minio.get_gif_urls()
 
+def get_cur():
+    return int(redis_conn.get("current_job_id"))
+
 
 def update__done_status(worker, workId):
     if worker == 1:
