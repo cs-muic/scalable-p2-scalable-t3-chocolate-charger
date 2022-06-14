@@ -6,7 +6,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  BASE_IMG_NAME: ${{ github.repository }}
+  BASE_IMG_NAME: marcarisen
 jobs:
   build:
     runs-on: ubuntu-latest
