@@ -8,6 +8,13 @@ spec:
   rules:
   - http:
       paths:
+      - path: /gif
+        pathType: Prefix
+        backend:
+          service:
+            name: minio
+            port:
+              number: 9000
       - path: /api
         pathType: Prefix
         backend:
@@ -21,11 +28,4 @@ spec:
           service:
             name: frontend
             port:
-              number: 80
-      - path: /gif
-        pathType: Prefix
-        backend:
-          service:
-            name: minio
-            port:
-              number: 9000
+              number: 81
