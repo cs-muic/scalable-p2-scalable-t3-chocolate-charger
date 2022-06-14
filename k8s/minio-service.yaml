@@ -12,4 +12,3 @@ spec:
   selector:
     # Looks for labels `app:minio` in the namespace and applies the spec
     app: minio
-    #type: ClusterIP
