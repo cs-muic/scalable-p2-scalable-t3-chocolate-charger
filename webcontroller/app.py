@@ -18,14 +18,6 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-### Debugging ###
-MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
-MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
-MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
-REDIS_HOST = os.getenv("REDIS_HOST", "redis://redis")
-REDIS_PORT = os.getenv("REDIS_PORT", "6379")
-REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
-
 # job id counter
 # we can also store this id in the redis
 redis_conn.set("current_job_id", "0")
