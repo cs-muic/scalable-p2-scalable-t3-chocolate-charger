@@ -8,7 +8,9 @@ RUN npm install
 
 COPY frontend-react/my-app .
 
+RUN npm run build
 
-FROM nginx:1.19.0
+
+FROM nginx:1.21-alpine
 COPY --from=builder /app/build /usr/share/nginx/html
 
