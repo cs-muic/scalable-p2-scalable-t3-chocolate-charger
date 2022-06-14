@@ -16,4 +16,7 @@ spec:
     spec:
       containers:
       - name: frontend 
-        image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-frontend:latest
+        # image: ghcr.io/cs-muic/scalable-p2-scalable-t3-chocolate-charger/p2-choco-charger-frontend:latest
+        image: ghcr.io/marcarisen/p2-choco-charger-frontend:latest
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com
