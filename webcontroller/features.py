@@ -47,10 +47,10 @@ def get_cur():
 
 def update__done_status(worker, workId, videonames):
     if worker == 1:
-        redis_conn.set(workId, ["Extracted >> composing", videonames])
+        redis_conn.set(workId, f"Extracted >> composing, {videonames}")
     else:
-        redis_conn.set(workId, ["Job Completed", videonames])
+        redis_conn.set(workId, f"Job Completed, {videonames}")
     print(f"Worker {worker} Done Task Id {workId}")
 
-# def update_fail_status(workId):
-#     redis_conn.set(workId, ["Failed", videonames])
+def update_fail_status(workId):
+    redis_conn.set(workId, f"Failed, {videonames}")
