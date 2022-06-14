@@ -10,12 +10,6 @@
     text-decoration: none;
 }
 
-img {
-    max-width: 50%;
-    max-height: 50%;
-    padding: 15;
-   }
-
 :root {
     --color-bg: #6CF0A9;
     --color-bg-variant: #34F58E;
@@ -44,7 +38,7 @@ body {
     background: var(--color-bg);
     color: var(--color-black);
     line-height: 1.9 ;
-    /* background-image: url(../src/assets/crissxcross.png); */
+
 }
 
 /* general styles */

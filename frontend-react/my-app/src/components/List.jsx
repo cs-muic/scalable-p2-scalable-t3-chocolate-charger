@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
-import ListBox from 'react-listbox';
+import { ListItemButton } from "@mui/material";
 
 
 const List = () => {
@@ -8,15 +8,15 @@ const List = () => {
     var temp2;
     
     const getNames = () =>  { 
-        axios.post("http://127.0.0.1:5000/api/list_objs",
+        axios.post("http://127.0.0.1/api/list_objs",
             {
                 "bucket":"video"
             }
         ).then(res => {
             console.log(res);
             temp2 = res.data;
-            console.log(typeof(temp2))
             setVidnames(temp2);
+            // console.log("res", res.data);
           })
           .catch(err => {
             console.log("error in request", err);
@@ -26,7 +26,7 @@ const List = () => {
     useEffect(() => getNames(), [])
     
     function sentRequest(name){
-        axios.post("http://127.0.0.1:5000/api/make_gif",
+        axios.post("http://127.0.0.1/api/make_gif",
         {
             "filename": name
         }
@@ -45,8 +45,16 @@ const List = () => {
 
     
     return (
+        // <div id='listbox-control'>
+        //     <h4>Select your favorite car:</h4>
+        //     <ListBox>
+        //         {vidnames.map((vid) => <li>{vid}</li>)}
+        //     </ListBox>
+        // </div>
             <ul>
-                {vidnames.map((vid) => <h1 onClick={() => sentRequest(vid)}>{vid}</h1>)}
+                {vidnames.map((vid) => <ListItemButton
+                className='button'
+                onClick={() => sentRequest(vid)}>{vid}</ListItemButton>)}
             </ul>
     )
 }
