@@ -2,7 +2,7 @@ name: Build update worker CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ maina ]
 
 env:
   REGISTRY: ghcr.io
