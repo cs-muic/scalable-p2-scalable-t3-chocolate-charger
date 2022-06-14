@@ -53,7 +53,7 @@ def make_gif():
 
 
     uploaded_filename = request.json.get("filename", None)
-    redis_conn.set(init_job_id, "Extracting Frames, {upload_filename}")
+    redis_conn.set(init_job_id, f"Extracting Frames, {uploaded_filename}")
 
     # pass it to worker 1 (enqueue)
     job_worker1 = extract_queue.enqueue(frames_extraction,uploaded_filename, init_job_id)

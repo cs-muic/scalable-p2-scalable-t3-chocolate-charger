@@ -1,8 +1,8 @@
-name: Build extract worker CI
+name: Build frontend CI
 
 on:
   push:
-    branches: [ bananaBood ]
+    branches: [ peeleep ]
 
 env:
   REGISTRY: ghcr.io
@@ -27,10 +27,10 @@ jobs:
       run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
     - name: Build the Docker image of rq extraction worker
       run: |
-        docker build . --file dockerfileextractworker \
-        --tag ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-extract-worker:${{ steps.vars.outputs.sha_short }} \
-        --tag ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-extract-worker:latest
+        docker build . --file dockerfileupdater \
+        --tag ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-frontedn:${{ steps.vars.outputs.sha_short }} \
+        --tag ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-fronted:latest
     - name: Publish the images
       run: | 
-        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-extract-worker:${{ steps.vars.outputs.sha_short }}
-        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-extract-worker:latest
+        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-frontend:${{ steps.vars.outputs.sha_short }}
+        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-frontend:latest
