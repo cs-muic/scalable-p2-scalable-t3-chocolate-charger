@@ -3,11 +3,8 @@ kind: Ingress
 metadata:
   name: ingress
   annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"
-    # kubernetes.io/ingress.class: nginx
-    # nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    # nginx.ingress.kubernetes.io/configuration-snippet: |
-    #   more_set_input_headers 'Host: minio:9000';
+    # ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: ingress-nginx
 spec:
   rules:
   - http:

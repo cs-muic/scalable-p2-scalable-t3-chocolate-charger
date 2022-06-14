@@ -30,7 +30,7 @@ const GIFS = () => {
         // alt="new"
         // />
         <ul>
-            {urls.map((url) => <img src={url} alt="new"/>)}
+            {urls.map((url) => <img src={'data:image/jpeg;base64,${url}'} alt="new"/>)}
         </ul>
     )
 

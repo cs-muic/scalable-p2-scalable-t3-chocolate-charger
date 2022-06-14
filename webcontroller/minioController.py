@@ -2,7 +2,7 @@ from xmlrpc.client import ResponseError
 import os
 from minio import Minio
 from minio.error import S3Error
-
+import base64
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minio")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_ADDRESS = os.getenv("MINIO_ADDRESS")
@@ -67,8 +67,12 @@ class minioController:
     #get url of an object
     def get_gif_urls(self): #make this go through all bucket "gif"
         gifs = self.list_objects("gif") 
-        url_lists = [self.client.presigned_get_object("gif", gif) for gif in gifs]
-        return url_lists
+        url_lists = [self.client.get_object("gif", gif).read() for gif in gifs]
+        decoded = []
+        for gif in url_lists:
+            im_b64 = base64.b64encode(gif).decode("utf8")
+            decoded.append(im_b64)
+        return decoded
 
     # list of all bucket name
     def list_buckets(self):

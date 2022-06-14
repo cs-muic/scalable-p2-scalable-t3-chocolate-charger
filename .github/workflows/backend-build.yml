@@ -2,7 +2,7 @@ name: Build Backend CI
 
 on:
   push:
-    branches: [ maina ]
+    branches: [ main ]
 
 env:
   REGISTRY: ghcr.io
