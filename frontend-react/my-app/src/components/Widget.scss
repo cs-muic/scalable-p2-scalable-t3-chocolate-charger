@@ -1,0 +1,22 @@
+.widget{
+    display: flex;
+    justify-content: space-between;
+    flex: 0.4;
+    padding: 10px;
+    box-shadow: 11px 12px 35px -8px rgba(31,30,30,0.85);
+    -webkit-box-shadow: 11px 12px 35px -8px rgba(31,30,30,0.85);
+    -moz-box-shadow: 11px 12px 35px -8px rgba(31,30,30,0.85);
+    height: 300px;
+
+    .bigButton{
+        display: flex;
+        flex: 1
+    }
+
+    .videos{
+        display: flex;
+        flex: 9;
+        margin-left: 10px;
+    }
+
+}
