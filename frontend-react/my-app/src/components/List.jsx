@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
-import { ListItemButton } from "@mui/material";
+import Box from '@mui/material/Box';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import { FixedSizeList } from 'react-window';
 
 
 const List = () => {
@@ -43,19 +47,31 @@ const List = () => {
         console.log(name);
     }
 
+    function renderRow(props) {
+        const { index, style } = props;
+
+        return (
+          <ListItem style={style} key={index} component="div" disablePadding>
+          <ListItemButton className='button' onClick={() => sentRequest(vidnames[index])}>{vidnames[index]}</ListItemButton>
+        </ListItem>
+          
+        );
+      }
+
+
     
     return (
-        // <div id='listbox-control'>
-        //     <h4>Select your favorite car:</h4>
-        //     <ListBox>
-        //         {vidnames.map((vid) => <li>{vid}</li>)}
-        //     </ListBox>
-        // </div>
-            <ul>
-                {vidnames.map((vid) => <ListItemButton
-                className='button'
-                onClick={() => sentRequest(vid)}>{vid}</ListItemButton>)}
-            </ul>
+        <Box sx={{ width: '100%', height: 299, maxWidth: 360, bgcolor: 'background.paper' }}>
+        <FixedSizeList
+          height={299}
+          width={360}
+          itemSize={100}
+          itemCount={vidnames.length}
+          overscanCount={80}
+        >
+            {renderRow}
+        </FixedSizeList>
+      </Box>
     )
 }
 
