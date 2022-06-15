@@ -25,7 +25,7 @@ const Widget = () => {
         <div className="widget">
             <div className="widgetName">Videos</div>
                 <div className="bigButton">
-                    <Button onClick={sentRequest()}>BUCKET!!</Button>
+                <Button onClick={() => sentRequest()}>Submit All</Button>
                 </div>
                 <div className="videos">
                     <List/>
