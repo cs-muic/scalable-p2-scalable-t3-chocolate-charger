@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
+import Box from '@mui/material/Box';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import { FixedSizeList } from 'react-window';
+
 
 const Status = () => {
     const [status, setStatus] = useState([]);
+
     var temp3;
     
     const getStatus = () =>  { 
@@ -21,10 +28,32 @@ const Status = () => {
 
     useEffect(() => getStatus(), [])
     
+    function renderRow(props) {
+        const { index, style } = props;
+
+        return (
+          <ListItem style={style} key={index} component="div" disablePadding>
+            {status.map((sta) => <ListItemText>{sta}</ListItemText>)}
+          </ListItem>
+        );
+      }
+
+
     return (
-            <ul>
-                {status.map((sta) => <h1>{sta}</h1>)}
-            </ul>
+        // <div>
+        //     {status.map((sta) => <h1>{sta}</h1>)}
+        // </div>
+        <Box sx={{ width: '100%', height: 299, maxWidth: 360, bgcolor: 'background.paper' }}>
+      <FixedSizeList
+        height={299}
+        width={360}
+        itemSize={46}
+        itemCount={status.length}
+        overscanCount={5}
+      >
+        {renderRow}
+      </FixedSizeList>
+    </Box>
     )
 }
 
