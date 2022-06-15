@@ -1,33 +1,30 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
 
-
 const Status = () => {
     const [status, setStatus] = useState([]);
-
-    var temp2;
-
-    function sentRequest(jobId){
-        axios.post("http://127.0.0.1/api/status",
-        {
-            "jobId": {jobId}
-        }
-    ).then(res => {
-        console.log(res);
-        temp2 = res.data;
-        setStatus(temp2);
-        // console.log("res", res.data);
-      })
-      .catch(err => {
-        console.log("error in request", err);
-      });
+    var temp3;
+    
+    const getStatus = () =>  { 
+        axios.get("http://127.0.0.1/api/get_status"
+        ).then(res => {
+            console.log(res);
+            temp3 = res.data;
+            console.log(temp3)
+            setStatus(temp3);
+            // console.log("res", res.data);
+          })
+          .catch(err => {
+            console.log("error in request", err);
+          });
     }
 
-
+    useEffect(() => getStatus(), [])
+    
     return (
-        <div>
-            <ul onClick={() => sentRequest(1)}>1</ul>
-        </div>
+            <ul>
+                {status.map((sta) => <h1>{sta}</h1>)}
+            </ul>
     )
 }
 
