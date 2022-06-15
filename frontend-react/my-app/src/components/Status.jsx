@@ -33,7 +33,8 @@ const Status = () => {
 
         return (
           <ListItem style={style} key={index} component="div" disablePadding>
-            {status.map((sta) => <ListItemText>{sta}</ListItemText>)}
+            {/* {status.map((sta) => <ListItemText>{sta}</ListItemText>)} */}
+            <ListItemText primary={`Item ${index + 1}`} />
           </ListItem>
         );
       }
@@ -47,9 +48,9 @@ const Status = () => {
       <FixedSizeList
         height={299}
         width={360}
-        itemSize={46}
-        itemCount={status.length}
-        overscanCount={5}
+        itemSize={100}
+        itemCount={50}
+        overscanCount={100}
       >
         {renderRow}
       </FixedSizeList>
