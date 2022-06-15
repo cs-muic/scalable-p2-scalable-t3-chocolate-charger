@@ -32,5 +32,5 @@ jobs:
         --tag ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-worker:latest
     - name: Publish the images
       run: | 
-        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-update-worker:${{ steps.vars.outputs.sha_short }}
-        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-update-worker:latest
+        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-worker:${{ steps.vars.outputs.sha_short }}
+        docker push ghcr.io/${{ env.BASE_IMG_NAME }}/p2-choco-charger-worker:latest
